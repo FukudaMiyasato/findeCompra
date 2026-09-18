@@ -25,12 +25,30 @@ Prototipo web (mobile first, estilo iOS) de cuatro pantallas:
 
 ## Complementos: distancia y horario
 
-Cada complemento muestra su **distancia al evento principal** (valores de ejemplo: 1.8–6.5 km)
+Cada complemento muestra su **distancia al evento principal** (valores de ejemplo, todos a menos de 1 km: 300–900 m; complementos: Bembos, Pizza Hut, Popeyes,
+Museo contemporáneo, Playland Park y Teatro)
 y el horario para **reclamarlo: de 3 pm a 12 pm**. Ambos datos también salen en su boleto.
+
+En la cabecera de *Completa tu experiencia* hay un botón de radio (**3 km** por defecto) que
+abre un menú para elegir 1, 3, 5 o 10 km. Por ahora es solo visual: no filtra nada.
+
+## Mapa de ruta del plan
+
+Debajo de los complementos hay un mapa (Leaflet + OpenStreetMap). Cada vez que se activa o
+desactiva un complemento se recalcula y dibuja con animación la **Mejor ruta generada**
+desde el Circo (Jockey Plaza) pasando por los complementos activos: prueba todos los
+órdenes posibles y elige el de menor distancia. Muestra paradas, distancia por tramo y tiempo estimado a pie.
+
+- **Editar**: permite reordenar las paradas (↑ ↓); el título cambia a *Ruta personalizada*.
+- **Compartir plan**: WhatsApp, Copiar (portapapeles) y Más (menú de compartir del sistema).
+
+Las ubicaciones de los complementos son de ejemplo (distancia + rumbo desde el evento).
 
 ## Premios por cantidad de ítems
 
-El conteo incluye las entradas de El Circo (hasta 10). El premio es un descuento sobre el
+El conteo incluye las entradas de El Circo (hasta 10). La barra empieza con un círculo
+inicial y termina en el último premio (7 ítems); solo muestra la cantidad de ítems (3, 5, 7).
+El porcentaje ganado se ve en naranja sobre la silueta de un ticket. El premio es un descuento sobre el
 total y se suma al *Ahorro aplicado*.
 
 | Ítems | Premio |
@@ -38,7 +56,7 @@ total y se suma al *Ahorro aplicado*.
 | < 3 | Sin premio |
 | 3 | 1 % de descuento en el total |
 | 5 | 2 % de descuento en el total |
-| 10 | 3 % de descuento en el total |
+| 7 | 3 % de descuento en el total |
 
 La sección de premios vive en la barra fija inferior del paquete: se muestra al hacer
 scroll hacia abajo y se minimiza a una rayita al hacer scroll hacia arriba

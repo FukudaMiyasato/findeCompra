@@ -331,7 +331,26 @@ img{display:block; max-width:100%;}
 /* Complementos */
 .comp-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px 18px 12px;}
 .comp-head h3{margin:0; font-size:11.5px; font-weight:700; letter-spacing:1.1px; color:var(--ink-2);}
-.comp-head p{margin:5px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.35; max-width:180px;}
+.comp-head{position:relative; align-items:center; gap:8px;}
+.comp-head-txt{flex:1; min-width:0;}
+.comp-head p{margin:5px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.35;}
+.comp-head .filter{min-width:0; width:96px; height:36px; padding:0 10px; font-size:13.5px;}
+.radius{position:relative; flex:none;}
+.radius-btn{
+  display:flex; align-items:center; gap:4px; height:36px; padding:0 11px; border-radius:18px;
+  background:var(--orange-soft); color:var(--orange); font-size:13px; font-weight:700; white-space:nowrap;
+  transition:transform .15s var(--spring);
+}
+.radius-btn:active{transform:scale(.93);}
+.radius-menu{
+  position:absolute; right:0; top:42px; z-index:20; min-width:108px; padding:6px;
+  background:#fff; border-radius:14px; box-shadow:var(--shadow-md); border:1px solid var(--line);
+  opacity:0; transform:translateY(-6px) scale(.96); transform-origin:top right; pointer-events:none;
+  transition:opacity .2s var(--ease), transform .2s var(--ease);
+}
+.radius-menu.open{opacity:1; transform:none; pointer-events:auto;}
+.radius-menu button{display:block; width:100%; text-align:left; padding:9px 10px; border-radius:9px; font-size:14px; font-weight:600;}
+.radius-menu button.on{background:var(--orange-soft); color:var(--orange);}
 .filter{
   flex:none; height:40px; min-width:118px;
   border:1px solid var(--line-2); border-radius:10px; background:#fff;
@@ -465,6 +484,12 @@ img{display:block; max-width:100%;}
   transition:filter .4s var(--ease), transform .4s var(--spring);
 }
 .prize-art.active{filter:none;}
+.prize-wrap{position:relative; z-index:0; flex:none; width:56px; height:36px; display:grid; place-items:center;}
+.prize-wrap .prize-art{min-width:0;}
+.art-ticket{
+  position:absolute; inset:0; width:100%; height:100%; z-index:-1;
+  fill:rgba(241,90,34,.14); filter:drop-shadow(0 2px 3px rgba(241,90,34,.18));
+}
 .prize-art.pop{animation:prizePop .6s var(--spring);}
 @keyframes prizePop{0%{transform:scale(.5) rotate(-12deg)}60%{transform:scale(1.25) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
 .prize-copy{flex:1; min-width:0;}
@@ -477,7 +502,7 @@ img{display:block; max-width:100%;}
   color:var(--ink-2); background:rgba(255,255,255,.7);
 }
 
-.track{position:relative; margin:10px 10px 2px; height:26px;}
+.track{position:relative; margin:8px 14px 0; height:28px;}
 .track-line{position:absolute; top:6px; left:0; right:0; height:4px; border-radius:4px; background:#EFD9C7;}
 .track-fill{
   position:absolute; top:6px; left:0; height:4px; border-radius:4px;
@@ -495,6 +520,8 @@ img{display:block; max-width:100%;}
 @keyframes nodePop{0%{transform:scale(1)}45%{transform:scale(1.6)}100%{transform:scale(1.1)}}
 .node span{display:block; font-size:9.5px; color:var(--ink-2); margin-top:2px; font-weight:600; white-space:nowrap;}
 .node.reached span{color:var(--orange);}
+.node.start i{width:12px; height:12px; margin-top:2px; border-width:2px;}
+
 
 /* Rayita minimizada */
 .prize-mini{
@@ -908,7 +935,7 @@ img{display:block; max-width:100%;}
         <div class="divider"></div>
 
         <div class="comp-head">
-          <div>
+          <div class="comp-head-txt">
             <h3>COMPLETA TU EXPERIENCIA</h3>
             <p>10% de descuento si lo compras como complemento</p>
           </div>
@@ -919,6 +946,18 @@ img{display:block; max-width:100%;}
               <option value="Experiencia">Experiencia</option>
             </select>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5B5B66" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="radius">
+            <button class="radius-btn" id="radiusBtn" aria-haspopup="true" aria-expanded="false">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+              <span id="radiusVal">3 km</span>
+            </button>
+            <div class="radius-menu" id="radiusMenu" role="menu">
+              <button data-km="1">1 km</button>
+              <button data-km="3" class="on">3 km</button>
+              <button data-km="5">5 km</button>
+              <button data-km="10">10 km</button>
+            </div>
           </div>
         </div>
 
@@ -968,7 +1007,7 @@ img{display:block; max-width:100%;}
           </button>
           <div class="prize-full">
             <div class="prize-top">
-              <div class="prize-art" id="prizeArt">🎁</div>
+              <div class="prize-wrap"><svg class="art-ticket" viewBox="0 0 30 18" aria-hidden="true"><path d="M3 0h24a3 3 0 0 0 3 3v3.5a2.5 2.5 0 0 0 0 5V15a3 3 0 0 0-3 3H3a3 3 0 0 0-3-3v-3.5a2.5 2.5 0 0 0 0-5V3a3 3 0 0 0 3-3z"/><path d="M22.5 2.5v13" stroke="#fff" stroke-width="1" stroke-dasharray="1.6 1.6"/></svg><div class="prize-art" id="prizeArt">🎁</div></div>
               <div class="prize-copy">
                 <h4>Gana premios por ítems</h4>
                 <div class="won none" id="prizeText"></div>
@@ -980,9 +1019,10 @@ img{display:block; max-width:100%;}
             <div class="track">
               <div class="track-line"></div>
               <div class="track-fill" id="trackFill"></div>
-              <div class="node" id="node3" style="left:24.4%"><i></i><span>3 · −1%</span></div>
-              <div class="node" id="node5" style="left:44.9%"><i></i><span>5 · −2%</span></div>
-              <div class="node" id="node10" style="left:96%"><i></i><span>10 · −3%</span></div>
+              <div class="node start reached" style="left:0%"><i></i></div>
+              <div class="node" id="node3" style="left:33.33%"><i></i><span>3</span></div>
+              <div class="node" id="node5" style="left:66.67%"><i></i><span>5</span></div>
+              <div class="node" id="node7" style="left:100%"><i></i><span>7</span></div>
             </div>
           </div>
           <span class="pm-bar" id="miniFill"></span>
@@ -1083,12 +1123,12 @@ img{display:block; max-width:100%;}
   var BASE = { name:'El Circo', price:190.00, qty:1, active:true };
 
   var COMPLEMENTS = [
-    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'5.0 km', km:5.0, bearing:300, on:false },
-    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'3.2 km', km:3.2, bearing:20, on:false },
-    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'1.8 km', km:1.8, bearing:140, on:false },
-    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'6.5 km', km:6.5, bearing:250, on:false },
-    { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'2.6 km', km:2.6, bearing:80, on:false },
-    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'4.1 km', km:4.1, bearing:200, on:false }
+    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'800 m', km:0.8, bearing:300, on:false },
+    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'500 m', km:0.5, bearing:20, on:false },
+    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'300 m', km:0.3, bearing:140, on:false },
+    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'900 m', km:0.9, bearing:250, on:false },
+    { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'600 m', km:0.6, bearing:80, on:false },
+    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, on:false }
   ];
 
   var DISCOUNT = 0.10; // 10% como complemento
@@ -1096,13 +1136,15 @@ img{display:block; max-width:100%;}
   var PRIZES = [
     { items:3,  pct:0.01, art:'-1%', name:'1% de descuento', label:'¡Ganaste 1% de descuento en el total!' },
     { items:5,  pct:0.02, art:'-2%', name:'2% de descuento', label:'¡Ganaste 2% de descuento en el total!' },
-    { items:10, pct:0.03, art:'-3%', name:'3% de descuento', label:'¡Ganaste 3% de descuento en el total!' }
+    { items:7,  pct:0.03, art:'-3%', name:'3% de descuento', label:'¡Ganaste 3% de descuento en el total!' }
   ];
-  var MAX_ITEMS = 10;
+  var MAX_ITEMS = 10;                           // tope de entradas en el stepper
+  var TRACK_MAX = PRIZES[PRIZES.length - 1].items; // último premio = final de la barra
   var CLAIM = '3 pm – 12 pm';   // horario para reclamar complementos
 
   // posición (%) de cada cantidad de ítems en la barra de premios
-  function trackPos(n){ return 4 + (Math.min(n, MAX_ITEMS) - 1) / (MAX_ITEMS - 1) * 92; }
+  // 1 ítem = inicio (0 %), último premio = final (100 %)
+  function trackPos(n){ return (Math.min(n, TRACK_MAX) - 1) / (TRACK_MAX - 1) * 100; }
 
   /* ---------------- Utilidades ---------------- */
   var $ = function(id){ return document.getElementById(id); };
@@ -1393,6 +1435,7 @@ img{display:block; max-width:100%;}
     var h = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.pow(Math.sin(dLng / 2), 2);
     return 2 * R * Math.asin(Math.sqrt(h));
   }
+  function fmtDist(km){ return km < 1 ? Math.round(km * 100) * 10 + ' m' : km.toFixed(1) + ' km'; }
   function routeKm(order){
     var prev = EVENT_POS, sum = 0;
     order.forEach(function(c){ var p = compPos(c); sum += kmBetween(prev, p); prev = p; });
@@ -1421,10 +1464,9 @@ img{display:block; max-width:100%;}
     routeMap = L.map('routeMap', {
       zoomControl:false, dragging:false, scrollWheelZoom:false, touchZoom:false,
       doubleClickZoom:false, boxZoom:false, keyboard:false, tap:false
-    }).setView(EVENT_POS, 13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      maxZoom:19, subdomains:'abcd',
-      attribution:'© OpenStreetMap · © CARTO'
+    }).setView(EVENT_POS, 15);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19, attribution:'© OpenStreetMap'
     }).addTo(routeMap);
     routeLayer = L.layerGroup().addTo(routeMap);
     return true;
@@ -1442,7 +1484,7 @@ img{display:block; max-width:100%;}
     // encabezado
     $('routeTitle').textContent = isBest ? 'Mejor ruta generada' : 'Ruta personalizada';
     $('routeSub').textContent = order.length
-      ? order.length + (order.length === 1 ? ' parada' : ' paradas') + ' · ' + total.toFixed(1) + ' km · ~' + Math.max(5, Math.round(total / 20 * 60)) + ' min'
+      ? order.length + (order.length === 1 ? ' parada' : ' paradas') + ' · ' + fmtDist(total) + ' · ~' + Math.max(1, Math.round(total / 4.5 * 60)) + ' min a pie'
       : 'Activa complementos para generar tu ruta';
     $('routeEdit').disabled = order.length < 2;
     if(order.length < 2 && editing) setEditing(false);
@@ -1453,7 +1495,7 @@ img{display:block; max-width:100%;}
     order.forEach(function(c, i){
       var pos = compPos(c), leg = kmBetween(prev, pos); prev = pos;
       html += '<div class="stop" style="animation-delay:' + (i * 60) + 'ms"><span class="n">' + (i + 1) + '</span>' +
-        '<span class="nm">' + c.emoji + ' ' + c.name + '</span><span class="km">+' + leg.toFixed(1) + ' km</span>' +
+        '<span class="nm">' + c.emoji + ' ' + c.name + '</span><span class="km">+' + fmtDist(leg) + '</span>' +
         '<span class="mv"><button data-mv="-1" data-id="' + c.id + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="Subir">↑</button>' +
         '<button data-mv="1" data-id="' + c.id + '"' + (i === order.length - 1 ? ' disabled' : '') + ' aria-label="Bajar">↓</button></span></div>';
     });
@@ -1472,7 +1514,7 @@ img{display:block; max-width:100%;}
       (function(a, b, idx){
         L.polyline([a, b], { color:'#fff', weight:8, opacity:.9, className:'route-line' }).addTo(routeLayer);
         var line = L.polyline([a, b], { color:'#F15A22', weight:4.5, className:'route-line' }).addTo(routeLayer);
-        line.bindTooltip(kmBetween(a, b).toFixed(1) + ' km', { permanent:true, direction:'center', className:'leg-tip' });
+        line.bindTooltip(fmtDist(kmBetween(a, b)), { permanent:true, direction:'center', className:'leg-tip' });
         var path = line.getElement ? line.getElement() : line._path;
         if(animate && path && path.getTotalLength){
           var len = path.getTotalLength();
@@ -1483,8 +1525,8 @@ img{display:block; max-width:100%;}
         }
       })(pts[i - 1], pts[i], i - 1);
     }
-    if(pts.length > 1) routeMap.flyToBounds(L.latLngBounds(pts), { padding:[34, 34], duration:animate ? .7 : 0, maxZoom:15 });
-    else routeMap.flyTo(EVENT_POS, 14, { duration:animate ? .6 : 0 });
+    if(pts.length > 1) routeMap.flyToBounds(L.latLngBounds(pts), { padding:[34, 34], duration:animate ? .7 : 0, maxZoom:17 });
+    else routeMap.flyTo(EVENT_POS, 16, { duration:animate ? .6 : 0 });
     if(animate){ var m = $('routeMap'); m.classList.remove('flash'); void m.offsetWidth; m.classList.add('flash'); }
   }
 
@@ -1510,7 +1552,7 @@ img{display:block; max-width:100%;}
     var order = currentOrder();
     var lines = ['Mi plan tufinde · Sáb 18 Mar', '★ Circo American · Jockey Plaza'];
     order.forEach(function(c, i){ lines.push((i + 1) + '. ' + c.name + ' (' + c.dist + ' del evento, reclamar ' + CLAIM + ')'); });
-    if(order.length) lines.push('Ruta: ' + routeKm(order).toFixed(1) + ' km');
+    if(order.length) lines.push('Ruta: ' + fmtDist(routeKm(order)) + ' a pie');
     lines.push('Total: S/ ' + money(totals().total));
     return lines.join('\n');
   }
@@ -1632,6 +1674,22 @@ img{display:block; max-width:100%;}
   });
 
   $('filterSel').addEventListener('change', applyFilter);
+
+  // radio de distancia: solo visual por ahora
+  $('radiusBtn').addEventListener('click', function(ev){
+    ev.stopPropagation();
+    var open = !$('radiusMenu').classList.contains('open');
+    $('radiusMenu').classList.toggle('open', open);
+    this.setAttribute('aria-expanded', String(open));
+  });
+  $('radiusMenu').addEventListener('click', function(ev){
+    var b = ev.target.closest('[data-km]'); if(!b) return;
+    Array.prototype.forEach.call(this.querySelectorAll('[data-km]'), function(x){ x.classList.toggle('on', x === b); });
+    $('radiusVal').textContent = b.dataset.km + ' km';
+    this.classList.remove('open');
+    $('radiusBtn').setAttribute('aria-expanded', 'false');
+  });
+  document.addEventListener('click', function(){ $('radiusMenu').classList.remove('open'); });
 
   /* ---------------- Pago + boletos ---------------- */
   var paying = false;
