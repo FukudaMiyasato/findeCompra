@@ -374,9 +374,15 @@ img{display:block; max-width:100%;}
 .comp-txt .tags{display:flex; gap:5px; margin-bottom:5px; white-space:nowrap;}
 .comp-txt .rec-tag{background:#FFD84D; color:#5A4200;}
 /* Complemento recomendado: personaje por encima de la foto, anclado abajo a la izquierda */
-.comp.rec{position:relative; margin-top:8px;}
+.comp.rec{
+  position:relative; margin-top:8px;
+  border:2px solid transparent; border-radius:16px;
+  background:linear-gradient(#fff,#fff) padding-box, linear-gradient(135deg,#F7D774,#C9962B 45%,#F3D27A 70%,#B7851F) border-box;
+  box-shadow:0 4px 14px rgba(201,150,43,.18);
+}
+.comp.rec.on{background:linear-gradient(var(--orange-soft),var(--orange-soft)) padding-box, linear-gradient(135deg,#F7D774,#C9962B 45%,#F3D27A 70%,#B7851F) border-box;}
 .rec-avatar{
-  position:absolute; left:-2px; bottom:0; z-index:3; height:124px; width:auto;
+  position:absolute; left:-12px; bottom:0; z-index:3; height:118px; width:auto;
   pointer-events:none; filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));
 }
 .comp-txt p{
@@ -448,7 +454,8 @@ img{display:block; max-width:100%;}
 .share-btn.wa{background:#25D366; color:#fff;}
 .save-note{font-size:11.5px; color:var(--green); font-weight:600;}
 .comp-price{text-align:right; flex:none;}
-.comp-price s{font-size:13px; color:var(--ink-3);}
+.comp-price s{display:block; font-size:13px; color:var(--ink-3);}
+.comp-price b.gold{font-size:16px; font-weight:800; color:#B8860B; background:linear-gradient(180deg,#E0B43A,#A8740A); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
 .comp-price b{display:block; font-size:14.5px; font-weight:700; margin-top:2px;}
 
 /* Switch */
@@ -1135,10 +1142,13 @@ img{display:block; max-width:100%;}
     { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'300 m', km:0.3, bearing:140, on:false },
     { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'900 m', km:0.9, bearing:250, on:false },
     { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'600 m', km:0.6, bearing:80, on:false },
-    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, recommended:true, on:false }
+    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, recommended:true, recPrice:25.00, on:false }
   ];
 
   var DISCOUNT = 0.10; // 10% como complemento
+
+  // precio final de un complemento (los recomendados tienen un descuento extra)
+  function compPrice(c){ return c.recPrice || c.price * (1 - DISCOUNT); }
 
   var PRIZES = [
     { items:3,  pct:0.01, art:'-1%', name:'1% de descuento', label:'¡Ganaste 1% de descuento en el total!' },
@@ -1287,7 +1297,9 @@ img{display:block; max-width:100%;}
             '<span><b>Reclamar</b> de ' + CLAIM + '</span>' +
           '</div>' +
         '</div>' +
-        '<div class="comp-price"><s>S/ ' + money(c.price) + '</s><b>S/ ' + money(c.price * (1 - DISCOUNT)) + '</b></div>' +
+        '<div class="comp-price"><s>S/ ' + money(c.price) + '</s>' +
+          (c.recPrice ? '<s>S/ ' + money(c.price * (1 - DISCOUNT)) + '</s><b class="gold">S/ ' + money(c.recPrice) + '</b>'
+                      : '<b>S/ ' + money(compPrice(c)) + '</b>') + '</div>' +
         (c.recommended ? '<img class="rec-avatar" src="assets/recomendador.webp" alt="">' : '') +
         '<div class="switch' + (c.on ? ' on' : '') + '" role="switch" aria-checked="' + c.on + '" tabindex="0"></div>';
       row.querySelector('.switch').addEventListener('click', function(){ toggle(c.id, this); });
@@ -1329,7 +1341,7 @@ img{display:block; max-width:100%;}
     var save = 0;
     COMPLEMENTS.forEach(function(c){
       if(!c.on) return;
-      var d = c.price * (1 - DISCOUNT);
+      var d = compPrice(c);
       sub += d;
       save += c.price - d;
     });
@@ -1736,7 +1748,7 @@ img{display:block; max-width:100%;}
     COMPLEMENTS.forEach(function(c){
       if(!c.on) return;
       var pal = { bembos:['#2B5CC4','#173A86'], pizza:['#2E8B57','#1B5E3B'], popeyes:['#F07A1F','#B8520C'], museo:['#4A505E','#262A33'], playland:['#8E44C4','#55267F'], teatro:['#1F8A9C','#10505C'] }[c.id];
-      list.push({ c1:pal[0], c2:pal[1], logo:c.emoji, org:c.name, hl:'Pagado', hv:'S/ ' + money(c.price * (1 - DISCOUNT)),
+      list.push({ c1:pal[0], c2:pal[1], logo:c.emoji, org:c.name, hl:'Pagado', hv:'S/ ' + money(compPrice(c)),
         pl:c.tag === 'Comida' ? 'Complemento' : 'Experiencia', pv:c.name.replace('Almuerzo ', ''),
         fields:[['Reclamar', CLAIM], ['Distancia', c.dist], ['Dto.', '10%']], code:c.id.toUpperCase() });
     });

@@ -29,7 +29,8 @@ Cada complemento muestra su **distancia al evento principal** (valores de ejempl
 Museo contemporáneo, Playland Park y Teatro)
 y el horario para **reclamarlo: de 3 pm a 12 pm**. Ambos datos también salen en su boleto.
 
-**Teatro** es el complemento *Recomendado*: lleva una etiqueta amarilla junto a *Experiencia* y el
+**Teatro** es el complemento *Recomendado*: borde dorado redondeado, un descuento extra
+(~~S/ 30~~ → ~~S/ 27~~ → **S/ 25** en dorado, que es lo que se cobra), etiqueta amarilla junto a *Experiencia* y el
 personaje recomendador (`assets/recomendador.webp`) por encima de su foto, anclado a la esquina
 inferior izquierda (tapa un poco el texto a propósito).
 
