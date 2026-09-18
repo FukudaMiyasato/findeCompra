@@ -371,7 +371,14 @@ img{display:block; max-width:100%;}
   margin:0; font-size:15.5px; font-weight:700; letter-spacing:-.2px;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-.comp-txt .tag{margin-bottom:5px;}
+.comp-txt .tags{display:flex; gap:5px; margin-bottom:5px; white-space:nowrap;}
+.comp-txt .rec-tag{background:#FFD84D; color:#5A4200;}
+/* Complemento recomendado: personaje por encima de la foto, anclado abajo a la izquierda */
+.comp.rec{position:relative; margin-top:8px;}
+.rec-avatar{
+  position:absolute; left:-2px; bottom:0; z-index:3; height:124px; width:auto;
+  pointer-events:none; filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));
+}
 .comp-txt p{
   margin:3px 0 0; font-size:12.5px; color:var(--ink-2);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
@@ -1128,7 +1135,7 @@ img{display:block; max-width:100%;}
     { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'300 m', km:0.3, bearing:140, on:false },
     { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'900 m', km:0.9, bearing:250, on:false },
     { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'600 m', km:0.6, bearing:80, on:false },
-    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, on:false }
+    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, recommended:true, on:false }
   ];
 
   var DISCOUNT = 0.10; // 10% como complemento
@@ -1266,12 +1273,13 @@ img{display:block; max-width:100%;}
     list.innerHTML = '';
     COMPLEMENTS.forEach(function(c){
       var row = document.createElement('div');
-      row.className = 'comp' + (c.on ? ' on' : '');
+      row.className = 'comp' + (c.on ? ' on' : '') + (c.recommended ? ' rec' : '');
       row.dataset.id = c.id; row.dataset.tag = c.tag;
       row.innerHTML =
         '<div class="thumb ' + c.cls + '">' + c.emoji + '</div>' +
         '<div class="comp-txt">' +
-          '<span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
+          '<div class="tags"><span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
+          (c.recommended ? '<span class="tag rec-tag">Recomendado</span>' : '') + '</div>' +
           '<h4>' + c.name + '</h4>' +
           '<p>' + c.desc + '</p>' +
           '<div class="comp-meta">' +
@@ -1280,6 +1288,7 @@ img{display:block; max-width:100%;}
           '</div>' +
         '</div>' +
         '<div class="comp-price"><s>S/ ' + money(c.price) + '</s><b>S/ ' + money(c.price * (1 - DISCOUNT)) + '</b></div>' +
+        (c.recommended ? '<img class="rec-avatar" src="assets/recomendador.webp" alt="">' : '') +
         '<div class="switch' + (c.on ? ' on' : '') + '" role="switch" aria-checked="' + c.on + '" tabindex="0"></div>';
       row.querySelector('.switch').addEventListener('click', function(){ toggle(c.id, this); });
       list.appendChild(row);

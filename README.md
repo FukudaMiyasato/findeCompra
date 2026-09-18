@@ -29,6 +29,10 @@ Cada complemento muestra su **distancia al evento principal** (valores de ejempl
 Museo contemporáneo, Playland Park y Teatro)
 y el horario para **reclamarlo: de 3 pm a 12 pm**. Ambos datos también salen en su boleto.
 
+**Teatro** es el complemento *Recomendado*: lleva una etiqueta amarilla junto a *Experiencia* y el
+personaje recomendador (`assets/recomendador.webp`) por encima de su foto, anclado a la esquina
+inferior izquierda (tapa un poco el texto a propósito).
+
 En la cabecera de *Completa tu experiencia* hay un botón de radio (**3 km** por defecto) que
 abre un menú para elegir 1, 3, 5 o 10 km. Por ahora es solo visual: no filtra nada.
 
