@@ -358,6 +358,10 @@ img{display:block; max-width:100%;}
   border-radius:6px; background:#FCEADF; color:#B4501F;
 }
 .tag.exp{background:#E6E9EE; color:#4A5260;}
+.comp-meta{display:flex; flex-direction:column; gap:2px; margin-top:6px; font-size:11.5px; color:var(--ink-2);}
+.comp-meta span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.comp-meta b{color:var(--ink); font-weight:700; margin-right:3px;}
+.save-note{font-size:11.5px; color:var(--green); font-weight:600;}
 .comp-price{text-align:right; flex:none;}
 .comp-price s{font-size:13px; color:var(--ink-3);}
 .comp-price b{display:block; font-size:14.5px; font-weight:700; margin-top:2px;}
@@ -397,7 +401,7 @@ img{display:block; max-width:100%;}
 .prize.min .prize-full{max-height:0; opacity:0; padding-top:0; padding-bottom:0;}
 .prize-top{display:flex; align-items:center; gap:10px;}
 .prize-art{
-  font-size:24px; line-height:1; flex:none; min-width:30px; text-align:center;
+  font-size:17px; font-weight:800; color:var(--orange); line-height:1; flex:none; min-width:40px; text-align:center;
   filter:grayscale(1) opacity(.35);
   transition:filter .4s var(--ease), transform .4s var(--spring);
 }
@@ -441,6 +445,7 @@ img{display:block; max-width:100%;}
   transition:max-height .38s var(--ease), opacity .25s var(--ease), padding .38s var(--ease);
 }
 .prize.min .prize-mini{max-height:34px; opacity:1; padding:7px 12px;}
+.prize-mini .mini-art{font-weight:800; color:var(--orange);}
 .prize-mini .pm-txt{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .prize-mini .pm-txt b{color:var(--orange);}
 .prize-mini .pm-bar{position:absolute; left:0; bottom:0; height:3px; background:linear-gradient(90deg,#F7A03C,var(--orange)); transition:width .6s var(--ease);}
@@ -866,7 +871,7 @@ img{display:block; max-width:100%;}
         <!-- Premios -->
         <div class="prize" id="prizeCard">
           <button class="prize-mini" id="prizeMini" aria-label="Ver premios">
-            <span id="miniArt">🎁</span>
+            <span id="miniArt" class="mini-art">🎁</span>
             <span class="pm-txt" id="miniText"></span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
           </button>
@@ -884,16 +889,16 @@ img{display:block; max-width:100%;}
             <div class="track">
               <div class="track-line"></div>
               <div class="track-fill" id="trackFill"></div>
-              <div class="node" id="node2" style="left:8%"><i></i><span>2 Ítems</span></div>
-              <div class="node" id="node3" style="left:50%"><i></i><span>3 Ítems</span></div>
-              <div class="node" id="node5" style="left:92%"><i></i><span>5 Ítems</span></div>
+              <div class="node" id="node3" style="left:24.4%"><i></i><span>3 · −1%</span></div>
+              <div class="node" id="node5" style="left:44.9%"><i></i><span>5 · −2%</span></div>
+              <div class="node" id="node10" style="left:96%"><i></i><span>10 · −3%</span></div>
             </div>
           </div>
           <span class="pm-bar" id="miniFill"></span>
         </div>
 
         <div class="sum-row">
-          <span>Ahorro aplicado</span>
+          <span>Ahorro aplicado <small class="save-note" id="saveNote"></small></span>
           <span class="dto-pill" id="dtoPill">− S/ <span id="dtoVal">0.00</span></span>
         </div>
         <div class="sum-total">
@@ -987,21 +992,24 @@ img{display:block; max-width:100%;}
   var BASE = { name:'El Circo', price:190.00, qty:1, active:true };
 
   var COMPLEMENTS = [
-    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    on:false },
-    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   on:false },
-    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', on:false },
-    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  on:false }
+    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'5.0 km', on:false },
+    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'3.2 km', on:false },
+    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'1.8 km', on:false },
+    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'6.5 km', on:false }
   ];
 
   var DISCOUNT = 0.10; // 10% como complemento
 
   var PRIZES = [
-    { items:2, art:'🍟',    name:'Papas fritas',            label:'¡Ganaste papas fritas!' },
-    { items:3, art:'🍟🥤',  name:'Papas fritas + gaseosa',  label:'¡Ganaste papas fritas + gaseosa!' },
-    { items:5, art:'🍗',    name:'Pieza de pollo',          label:'¡Ganaste una pieza de pollo!' }
+    { items:3,  pct:0.01, art:'-1%', name:'1% de descuento', label:'¡Ganaste 1% de descuento en el total!' },
+    { items:5,  pct:0.02, art:'-2%', name:'2% de descuento', label:'¡Ganaste 2% de descuento en el total!' },
+    { items:10, pct:0.03, art:'-3%', name:'3% de descuento', label:'¡Ganaste 3% de descuento en el total!' }
   ];
+  var MAX_ITEMS = 10;
+  var CLAIM = '3 pm – 12 pm';   // horario para reclamar complementos
 
-  var NODE_POS = { 2:8, 3:50, 5:92 };
+  // posición (%) de cada cantidad de ítems en la barra de premios
+  function trackPos(n){ return 4 + (Math.min(n, MAX_ITEMS) - 1) / (MAX_ITEMS - 1) * 92; }
 
   /* ---------------- Utilidades ---------------- */
   var $ = function(id){ return document.getElementById(id); };
@@ -1131,6 +1139,10 @@ img{display:block; max-width:100%;}
           '<h4>' + c.name + '</h4>' +
           '<p>' + c.desc + '</p>' +
           '<span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
+          '<div class="comp-meta">' +
+            '<span><b>Distancia</b> ' + c.dist + ' del evento</span>' +
+            '<span><b>Reclamar</b> de ' + CLAIM + '</span>' +
+          '</div>' +
         '</div>' +
         '<div class="comp-price"><s>S/ ' + money(c.price) + '</s><b>S/ ' + money(c.price * (1 - DISCOUNT)) + '</b></div>' +
         '<div class="switch' + (c.on ? ' on' : '') + '" role="switch" aria-checked="' + c.on + '" tabindex="0"></div>';
@@ -1167,15 +1179,19 @@ img{display:block; max-width:100%;}
     return n;
   }
   function totals(){
-    var total = BASE.active ? BASE.price * BASE.qty : 0;
+    var sub = BASE.active ? BASE.price * BASE.qty : 0;
     var save = 0;
     COMPLEMENTS.forEach(function(c){
       if(!c.on) return;
       var d = c.price * (1 - DISCOUNT);
-      total += d;
+      sub += d;
       save += c.price - d;
     });
-    return { total: total, save: save };
+    // premio: % de descuento sobre el total
+    var tier = tierIndex(itemCount());
+    var pct = tier >= 0 ? PRIZES[tier].pct : 0;
+    var prizeOff = sub * pct;
+    return { total: sub - prizeOff, save: save + prizeOff, prizeOff: prizeOff, pct: pct };
   }
   function tierIndex(count){
     var idx = -1;
@@ -1183,11 +1199,7 @@ img{display:block; max-width:100%;}
     return idx;
   }
   function fillPercent(count){
-    if(count <= 1) return 0;
-    if(count <= 2) return NODE_POS[2] * (count - 1);
-    if(count <= 3) return NODE_POS[2] + (NODE_POS[3] - NODE_POS[2]) * (count - 2);
-    if(count <= 5) return NODE_POS[3] + (NODE_POS[5] - NODE_POS[3]) * ((count - 3) / 2);
-    return 100;
+    return count <= 1 ? 0 : trackPos(count);
   }
 
   function update(){
@@ -1205,6 +1217,7 @@ img{display:block; max-width:100%;}
     animateNumber($('ctaTotal'), t.total, true);
     animateNumber($('dtoVal'), t.save, true);
     animateNumber($('circoPrice'), BASE.price * BASE.qty, true);
+    $('saveNote').textContent = t.pct ? '· incluye ' + Math.round(t.pct * 100) + '% premio' : '';
     if(t.save !== parseFloat($('dtoVal').dataset.prev || '0')){
       bump($('dtoPill'));
       $('dtoVal').dataset.prev = t.save;
@@ -1216,7 +1229,7 @@ img{display:block; max-width:100%;}
 
     // barra de premios
     $('trackFill').style.width = fillPercent(count) + '%';
-    [2,3,5].forEach(function(n){
+    PRIZES.forEach(function(p){ var n = p.items;
       var node = $('node' + n);
       var reached = count >= n;
       var wasReached = node.classList.contains('reached');
@@ -1337,7 +1350,7 @@ img{display:block; max-width:100%;}
 
   /* ---------------- Stepper / eliminar ---------------- */
   $('plusBtn').addEventListener('click', function(){
-    if(BASE.qty >= 5) return;
+    if(BASE.qty >= MAX_ITEMS) return;
     BASE.qty++; BASE.active = true;
     floater(this, '+1 ítem');
     playSave(itemCount());
@@ -1403,15 +1416,8 @@ img{display:block; max-width:100%;}
       var pal = { bembos:['#2B5CC4','#173A86'], pizza:['#2E8B57','#1B5E3B'], popeyes:['#F07A1F','#B8520C'], museo:['#4A505E','#262A33'] }[c.id];
       list.push({ c1:pal[0], c2:pal[1], logo:c.emoji, org:c.name, hl:'Pagado', hv:'S/ ' + money(c.price * (1 - DISCOUNT)),
         pl:c.tag === 'Comida' ? 'Complemento' : 'Experiencia', pv:c.name.replace('Almuerzo ', ''),
-        fields:[['Incluye', c.desc], ['Válido', 'Sáb 18 Mar'], ['Dto.', '10%']], code:c.id.toUpperCase() });
+        fields:[['Reclamar', CLAIM], ['Distancia', c.dist], ['Dto.', '10%']], code:c.id.toUpperCase() });
     });
-    var tier = tierIndex(itemCount());
-    if(tier >= 0){
-      var pz = PRIZES[tier];
-      list.push({ c1:'#FFD66B', c2:'#F2A93B', fg:'#3B2303', logo:pz.art.slice(0, 2), org:'Premio findeCompra',
-        hl:'Valor', hv:'Gratis', pl:'Premio', pv:pz.name,
-        fields:[['Por', itemCount() + ' ítems'], ['Canje', 'Jockey Plaza'], ['Válido', 'Sáb 18 Mar']], code:'PREMIO-' + pz.items });
-    }
     return list;
   }
 

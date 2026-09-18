@@ -21,18 +21,24 @@ Prototipo web (mobile first, estilo iOS) de cuatro pantallas:
 - Al activar un switch se recalculan **con animación**: cantidad de ítems,
   ahorro aplicado (un solo valor) y total a pagar.
 - Cada ítem agregado suena un "cling" de ahorro (Web Audio, sin archivos).
-- El total siempre es coherente: `190 × cantidad + Σ complementos activos (−10 %)`.
+- El total siempre es coherente: `(190 × cantidad + Σ complementos activos (−10 %)) × (1 − % premio)`.
+
+## Complementos: distancia y horario
+
+Cada complemento muestra su **distancia al evento principal** (valores de ejemplo: 1.8–6.5 km)
+y el horario para **reclamarlo: de 3 pm a 12 pm**. Ambos datos también salen en su boleto.
 
 ## Premios por cantidad de ítems
 
-El conteo incluye la experiencia base (El Circo).
+El conteo incluye las entradas de El Circo (hasta 10). El premio es un descuento sobre el
+total y se suma al *Ahorro aplicado*.
 
 | Ítems | Premio |
 |---|---|
-| < 2 | *No tienes premios, agrega más ítems para conseguir premios* |
-| 2 | 🍟 Papas fritas |
-| 3 | 🍟🥤 Papas fritas + gaseosa |
-| 5 | 🍗 Pieza de pollo |
+| < 3 | Sin premio |
+| 3 | 1 % de descuento en el total |
+| 5 | 2 % de descuento en el total |
+| 10 | 3 % de descuento en el total |
 
 La sección de premios vive en la barra fija inferior del paquete: se muestra al hacer
 scroll hacia abajo y se minimiza a una rayita al hacer scroll hacia arriba
