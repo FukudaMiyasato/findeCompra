@@ -27,6 +27,9 @@
   --green:#12945A;
   --green-soft:#DCF3E5;
   --purple:#6B2FB5;
+  --app-bg:#F4F1ED;
+  --brand:#FF5A45;
+  --navy:#00133A;
   --radius:16px;
   --radius-lg:22px;
   --shadow-sm:0 1px 2px rgba(27,27,31,.06), 0 4px 12px rgba(27,27,31,.05);
@@ -59,6 +62,7 @@ img{display:block; max-width:100%;}
   overflow:hidden;
   box-shadow:0 0 0 11px #111318, 0 0 0 13px #33363F, 0 40px 90px rgba(0,0,0,.55);
   display:flex; flex-direction:column;
+  container-type:size;
 }
 @media (max-width:460px), (max-height:700px){
   body{background:var(--bg);}
@@ -106,43 +110,9 @@ img{display:block; max-width:100%;}
 }
 .scroll::-webkit-scrollbar{display:none;}
 
-/* Hero */
-.hero{position:relative; height:330px; overflow:hidden; background:#2A0B4E;}
-.hero-bg{position:absolute; inset:0;}
-.hero-bg::before{ /* halo de reflectores */
-  content:""; position:absolute; inset:-30% -10% 0;
-  background:
-    radial-gradient(60% 55% at 22% 38%, rgba(255,255,255,.95) 0%, rgba(214,180,255,.45) 18%, rgba(120,40,190,0) 55%),
-    radial-gradient(38% 44% at 72% 28%, rgba(255,214,120,.55) 0%, rgba(255,120,60,0) 60%);
-  filter:blur(2px);
-}
-.hero-bg::after{ /* rayos */
-  content:""; position:absolute; inset:0;
-  background:repeating-conic-gradient(from 200deg at 22% 40%,
-    rgba(255,255,255,.14) 0deg 4deg, rgba(255,255,255,0) 4deg 13deg);
-  mix-blend-mode:screen; opacity:.75;
-}
-.hero-base{
-  position:absolute; inset:0;
-  background:
-    linear-gradient(180deg,#4B1188 0%, #6A22B6 34%, #8B2FA8 58%, #3E0C6B 100%);
-}
-.hero-floor{
-  position:absolute; left:0; right:0; bottom:0; height:96px;
-  background:linear-gradient(180deg, rgba(20,4,40,0) 0%, rgba(20,4,40,.75) 70%, rgba(20,4,40,.92) 100%);
-}
-.hero-figure{
-  position:absolute; left:50%; bottom:88px; transform:translateX(-50%);
-  font-size:96px; line-height:1;
-  filter:drop-shadow(0 12px 26px rgba(0,0,0,.55));
-  animation:heroFloat 5.5s ease-in-out infinite;
-}
-@keyframes heroFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
-.hero-sparkle{position:absolute; font-size:22px; opacity:.85; animation:twinkle 3.2s ease-in-out infinite;}
-.hero-sparkle.s1{left:16%; top:34%;}
-.hero-sparkle.s2{right:18%; top:26%; animation-delay:.8s;}
-.hero-sparkle.s3{right:32%; top:48%; animation-delay:1.6s; font-size:16px;}
-@keyframes twinkle{0%,100%{opacity:.25; transform:scale(.85)}50%{opacity:1; transform:scale(1.1)}}
+/* Hero (imagen estática) */
+.hero{position:relative; height:40vh; height:40cqh; overflow:hidden; background:#C8161D;}
+.hero-img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;}
 
 .hero-top{
   position:absolute; top:58px; left:16px; right:16px; z-index:12;
@@ -157,27 +127,9 @@ img{display:block; max-width:100%;}
 .round-btn:active{transform:scale(.88);}
 .round-btn.fav.on svg{fill:var(--orange); stroke:var(--orange);}
 .hero-actions{display:flex; gap:10px;}
-.logo-badge{
-  position:absolute; top:58px; left:50%; transform:translateX(-50%); z-index:11;
-  background:linear-gradient(180deg,#1F4FA8,#12357A);
-  border:2px solid #E8C05A; border-radius:8px;
-  padding:6px 14px 7px; text-align:center;
-  box-shadow:0 6px 18px rgba(0,0,0,.35);
-}
-.logo-badge b{
-  display:block; font-size:16px; letter-spacing:.5px; color:#fff;
-  text-shadow:0 2px 0 #B23A12; font-family:Georgia, serif;
-}
-.logo-badge span{display:block; font-size:8px; letter-spacing:4px; color:#E8C05A;}
-
-.hero-caption{
-  position:absolute; left:16px; right:16px; bottom:18px; z-index:12;
-  background:rgba(18,12,26,.6);
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  border-radius:14px; padding:14px 16px;
-}
-.hero-caption h1{margin:0; font-size:25px; font-weight:800; letter-spacing:-.4px; color:#fff;}
-.hero-caption p{margin:4px 0 0; font-size:13.5px; color:rgba(255,255,255,.82);}
+.hero-info{padding:18px 20px 0;}
+.hero-info h1{margin:0; font-size:25px; font-weight:800; letter-spacing:-.4px;}
+.hero-info p{margin:4px 0 0; font-size:13.5px; color:var(--ink-2);}
 
 /* Meta row */
 .meta{
@@ -195,32 +147,18 @@ img{display:block; max-width:100%;}
 }
 .lead{margin:0; font-size:15px; line-height:1.55; color:#3A3A44;}
 
-/* Mapa */
+/* Mapa (Google Maps · Jockey Plaza) */
 .map-card{
-  margin:16px 0 4px; border-radius:var(--radius); overflow:hidden;
-  position:relative; background:#D9D6D0; box-shadow:var(--shadow-sm);
+  display:block; margin:16px 0 4px; border-radius:var(--radius); overflow:hidden;
+  position:relative; height:210px; background:#E8E4DC; box-shadow:var(--shadow-sm);
 }
-.map-head{
-  position:absolute; top:0; left:0; right:0; z-index:3;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 14px; color:#fff; font-size:13px; font-weight:600;
-  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0));
+.map-card iframe{position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none;}
+.map-go{
+  position:absolute; right:10px; bottom:10px; z-index:2;
+  display:flex; align-items:center; gap:6px;
+  background:#fff; color:#1A73E8; font-size:13px; font-weight:700;
+  padding:8px 12px; border-radius:20px; box-shadow:0 2px 10px rgba(0,0,0,.18);
 }
-.map-head .mh-left{display:flex; align-items:center; gap:7px;}
-.map-head .mh-right{font-size:12px; font-weight:500; opacity:.92;}
-.map-svg{display:block; width:100%; height:210px;}
-.route{stroke-dasharray:1 7; stroke-linecap:round; animation:dash 22s linear infinite;}
-@keyframes dash{to{stroke-dashoffset:-320;}}
-.map-stats{
-  position:absolute; left:10px; right:10px; bottom:10px; z-index:3;
-  display:grid; grid-template-columns:1fr 1fr; gap:10px;
-}
-.map-stat{
-  background:rgba(255,255,255,.93); backdrop-filter:blur(8px);
-  border-radius:12px; padding:9px 12px;
-}
-.map-stat small{display:block; font-size:11px; color:var(--ink-2); margin-bottom:2px;}
-.map-stat b{font-size:15px; font-weight:700;}
 
 /* Precio */
 .price-block{padding:22px 20px 0;}
@@ -271,6 +209,9 @@ img{display:block; max-width:100%;}
 .t-pizza{background:linear-gradient(145deg,#E86A2B,#B8341A);}
 .t-chicken{background:linear-gradient(145deg,#D9452E,#8E1F13);}
 .t-museum{background:linear-gradient(145deg,#B9BCC4,#7C818C);}
+.t-water{background:linear-gradient(145deg,#4FC3F7,#1E6FD9);}
+.t-zoo{background:linear-gradient(145deg,#A5D66B,#3F8F3A);}
+.t-farm{background:linear-gradient(145deg,#F4D58D,#C98B3A);}
 .plus{color:var(--ink-3); font-size:17px; font-weight:600;}
 .combo-txt h4{margin:0; font-size:15px; font-weight:700; line-height:1.25;}
 .combo-txt p{margin:3px 0 0; font-size:12.5px; color:var(--ink-2); line-height:1.35;}
@@ -437,53 +378,72 @@ img{display:block; max-width:100%;}
 .switch:active::after{width:30px;}
 .switch.on:active::after{transform:translateX(17px);}
 
-/* Premios */
+/* Premios (compacto, dentro de la barra fija inferior) */
 .prize{
-  margin:18px 12px 6px; background:linear-gradient(180deg,#FFF6EE,#FFEFE2);
-  border-radius:18px; padding:16px 16px 14px; position:relative; overflow:hidden;
+  margin:0 0 12px; background:linear-gradient(180deg,#FFF6EE,#FFEFE2);
+  border-radius:14px; position:relative; overflow:hidden;
   transition:box-shadow .35s var(--ease);
 }
 .prize.celebrate{animation:celebrate .7s var(--ease);}
 @keyframes celebrate{
   0%{box-shadow:0 0 0 0 rgba(241,90,34,.42)}
-  60%{box-shadow:0 0 0 14px rgba(241,90,34,0)}
+  60%{box-shadow:0 0 0 12px rgba(241,90,34,0)}
   100%{box-shadow:0 0 0 0 rgba(241,90,34,0)}
 }
-.prize-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
-.prize-copy{flex:1;}
-.prize-copy h4{margin:0; font-size:15.5px; font-weight:800; line-height:1.3; letter-spacing:-.2px; max-width:215px;}
-.prize-copy .won{
-  margin:7px 0 0; font-size:13px; font-weight:600; color:var(--orange);
-  display:flex; align-items:center; gap:6px; min-height:19px;
+.prize-full{
+  max-height:120px; opacity:1; padding:10px 12px 6px;
+  transition:max-height .38s var(--ease), opacity .25s var(--ease), padding .38s var(--ease);
 }
-.prize-copy .none{color:var(--ink-2); font-weight:500;}
+.prize.min .prize-full{max-height:0; opacity:0; padding-top:0; padding-bottom:0;}
+.prize-top{display:flex; align-items:center; gap:10px;}
 .prize-art{
-  font-size:40px; line-height:1; flex:none; min-width:84px; text-align:right;
+  font-size:24px; line-height:1; flex:none; min-width:30px; text-align:center;
   filter:grayscale(1) opacity(.35);
   transition:filter .4s var(--ease), transform .4s var(--spring);
 }
 .prize-art.active{filter:none;}
 .prize-art.pop{animation:prizePop .6s var(--spring);}
-@keyframes prizePop{0%{transform:scale(.5) rotate(-12deg)}60%{transform:scale(1.18) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes prizePop{0%{transform:scale(.5) rotate(-12deg)}60%{transform:scale(1.25) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+.prize-copy{flex:1; min-width:0;}
+.prize-copy h4, .prize-copy .won{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.prize-copy h4{margin:0; font-size:12.5px; font-weight:800; letter-spacing:-.1px;}
+.prize-copy .won{margin:2px 0 0; font-size:12px; font-weight:600; color:var(--orange); line-height:1.3;}
+.prize-copy .none{color:var(--ink-2); font-weight:500;}
+.prize-toggle{
+  width:26px; height:26px; border-radius:50%; flex:none; display:grid; place-items:center;
+  color:var(--ink-2); background:rgba(255,255,255,.7);
+}
 
-.track{position:relative; margin:22px 6px 4px; height:34px;}
-.track-line{position:absolute; top:9px; left:0; right:0; height:6px; border-radius:6px; background:#EFD9C7;}
+.track{position:relative; margin:10px 10px 2px; height:26px;}
+.track-line{position:absolute; top:6px; left:0; right:0; height:4px; border-radius:4px; background:#EFD9C7;}
 .track-fill{
-  position:absolute; top:9px; left:0; height:6px; border-radius:6px;
+  position:absolute; top:6px; left:0; height:4px; border-radius:4px;
   background:linear-gradient(90deg,#F7A03C,var(--orange)); width:0;
   transition:width .6s var(--ease);
 }
 .node{position:absolute; top:0; transform:translateX(-50%); text-align:center;}
 .node i{
-  display:block; width:24px; height:24px; border-radius:50%;
-  background:#fff; border:3px solid #EFD9C7; margin:0 auto;
+  display:block; width:16px; height:16px; border-radius:50%;
+  background:#fff; border:2.5px solid #EFD9C7; margin:0 auto;
   transition:border-color .35s var(--ease), transform .35s var(--spring), background .35s;
 }
-.node.reached i{border-color:var(--orange); background:var(--orange); transform:scale(1.12);}
+.node.reached i{border-color:var(--orange); background:var(--orange); transform:scale(1.1);}
 .node.reached.just i{animation:nodePop .6s var(--spring);}
-@keyframes nodePop{0%{transform:scale(1)}45%{transform:scale(1.5)}100%{transform:scale(1.12)}}
-.node span{display:block; font-size:10.5px; color:var(--ink-2); margin-top:6px; font-weight:600; white-space:nowrap;}
+@keyframes nodePop{0%{transform:scale(1)}45%{transform:scale(1.6)}100%{transform:scale(1.1)}}
+.node span{display:block; font-size:9.5px; color:var(--ink-2); margin-top:2px; font-weight:600; white-space:nowrap;}
 .node.reached span{color:var(--orange);}
+
+/* Rayita minimizada */
+.prize-mini{
+  display:flex; align-items:center; gap:8px; width:100%;
+  max-height:0; opacity:0; padding:0 12px; overflow:hidden;
+  font-size:11.5px; font-weight:600; color:var(--ink-2); text-align:left;
+  transition:max-height .38s var(--ease), opacity .25s var(--ease), padding .38s var(--ease);
+}
+.prize.min .prize-mini{max-height:34px; opacity:1; padding:7px 12px;}
+.prize-mini .pm-txt{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.prize-mini .pm-txt b{color:var(--orange);}
+.prize-mini .pm-bar{position:absolute; left:0; bottom:0; height:3px; background:linear-gradient(90deg,#F7A03C,var(--orange)); transition:width .6s var(--ease);}
 
 /* Resumen + CTA */
 .summary{
@@ -498,7 +458,6 @@ img{display:block; max-width:100%;}
   transition:transform .3s var(--spring);
 }
 .dto-pill.bump{animation:bump .45s var(--spring);}
-.sum-save{color:var(--green); font-weight:700; font-size:13.5px;}
 .sum-total{display:flex; align-items:baseline; justify-content:space-between; margin-top:8px;}
 .sum-total span{font-size:16px; font-weight:700;}
 .sum-total b{font-size:24px; font-weight:800; letter-spacing:-.6px;}
@@ -514,9 +473,9 @@ img{display:block; max-width:100%;}
 
 /* Toast */
 .toast{
-  position:absolute; left:50%; bottom:196px; transform:translate(-50%, 20px);
+  position:absolute; left:50%; bottom:250px; transform:translate(-50%, 20px);
   background:rgba(27,27,31,.93); color:#fff; font-size:13.5px; font-weight:500;
-  padding:11px 16px; border-radius:24px; z-index:80; opacity:0; pointer-events:none;
+  padding:11px 16px; border-radius:24px; z-index:99; opacity:0; pointer-events:none;
   transition:opacity .3s var(--ease), transform .3s var(--ease);
   display:flex; align-items:center; gap:12px; white-space:nowrap;
 }
@@ -535,6 +494,175 @@ img{display:block; max-width:100%;}
   100%{opacity:0; transform:translateY(-52px) scale(.95)}
 }
 .num{display:inline-block;}
+.prize:not(.min) .pm-bar{opacity:0;}
+
+/* Confeti */
+.confetti{position:absolute; top:-14px; z-index:95; pointer-events:none; border-radius:2px;}
+
+/* ============================================================
+   PANTALLA 3 · PAGO (carga)
+   ============================================================ */
+#paying{
+  z-index:90; background:linear-gradient(170deg,#F7743A 0%, var(--orange) 45%, #D9420F 100%);
+  color:#fff; align-items:center; justify-content:center; text-align:center;
+  opacity:0; visibility:hidden; transform:scale(1.04);
+  transition:opacity .4s var(--ease), transform .45s var(--ease), visibility 0s .45s;
+}
+#paying.show{opacity:1; visibility:visible; transform:scale(1); transition:opacity .4s var(--ease), transform .45s var(--ease);}
+.pay-card{
+  width:210px; height:132px; border-radius:16px; margin:0 auto 34px; position:relative; text-align:left;
+  background:linear-gradient(135deg,rgba(255,255,255,.34),rgba(255,255,255,.12));
+  border:1px solid rgba(255,255,255,.45); box-shadow:0 18px 40px rgba(120,30,0,.28);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  animation:cardFloat 2.4s ease-in-out infinite;
+}
+@keyframes cardFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(-1deg)}}
+.pay-card .chip{position:absolute; left:18px; top:34px; width:34px; height:25px; border-radius:6px; background:linear-gradient(135deg,#FFE3A6,#E8B45A);}
+.pay-card .digits{position:absolute; left:18px; bottom:18px; font-size:15px; font-weight:700; letter-spacing:2px;}
+.pay-card .brand{position:absolute; right:16px; top:14px; font-size:13px; font-weight:800; font-style:italic; letter-spacing:.5px;}
+.pay-card::after{ /* brillo */
+  content:""; position:absolute; inset:0; border-radius:16px;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);
+  background-size:250% 100%; animation:shine 1.6s linear infinite;
+}
+@keyframes shine{from{background-position:130% 0}to{background-position:-130% 0}}
+.pay-status{position:relative; width:58px; height:58px; margin:0 auto 20px;}
+.spinner{
+  position:absolute; inset:0; border-radius:50%;
+  border:4px solid rgba(255,255,255,.28); border-top-color:#fff;
+  animation:spin .8s linear infinite; transition:opacity .25s;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pay-check{position:absolute; inset:0; border-radius:50%; background:#fff; display:grid; place-items:center; transform:scale(0); transition:transform .45s var(--spring);}
+.pay-check path{stroke-dasharray:30; stroke-dashoffset:30; transition:stroke-dashoffset .4s .2s var(--ease);}
+#paying.done .spinner{opacity:0;}
+#paying.done .pay-check{transform:scale(1);}
+#paying.done .pay-check path{stroke-dashoffset:0;}
+#paying h2{margin:0 32px; font-size:21px; font-weight:800; letter-spacing:-.3px; line-height:1.25;}
+#paying p{margin:8px 0 0; font-size:14px; opacity:.9;}
+.dots::after{content:""; animation:dots 1.2s steps(4) infinite;}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+#paying.done .dots::after{content:""; animation:none;}
+.pay-bar{width:200px; height:5px; border-radius:5px; margin:26px auto 0; background:rgba(255,255,255,.28); overflow:hidden;}
+.pay-bar i{display:block; height:100%; width:0; background:#fff; border-radius:5px;}
+#paying.run .pay-bar i{width:100%; transition:width 2.6s cubic-bezier(.4,.1,.3,1);}
+
+/* ============================================================
+   PANTALLA 4 · BOLETOS (estilo Apple Wallet)
+   ============================================================ */
+#tickets{
+  z-index:92; background:var(--app-bg); color:var(--ink);
+  transform:translateY(100%); transition:transform .55s var(--ease);
+}
+#tickets.show{transform:translateY(0);}
+.wallet-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  padding:14px 20px 14px;
+}
+.wallet-head h2{margin:0; font-size:32px; font-weight:800; letter-spacing:-.8px;}
+.wallet-head p{margin:3px 0 0; font-size:13.5px; color:var(--ink-2);}
+.wallet-done{
+  height:34px; padding:0 16px; border-radius:18px; background:#fff;
+  color:var(--ink); font-size:15px; font-weight:700; box-shadow:var(--shadow-sm);
+}
+.wallet-scroll{flex:1; overflow-y:auto; scrollbar-width:none; padding:0 14px 30px;}
+.wallet-scroll::-webkit-scrollbar{display:none;}
+.wallet-stack{position:relative;}
+.pass{
+  position:absolute; left:0; right:0; height:430px; border-radius:16px; overflow:hidden;
+  background:linear-gradient(180deg,var(--c1),var(--c2)); color:var(--fg,#fff);
+  box-shadow:0 -1px 0 rgba(255,255,255,.18) inset, 0 -4px 18px rgba(0,19,58,.18);
+  transform:translateY(900px) scale(.96); opacity:0; cursor:pointer;
+  transition:transform .75s cubic-bezier(.2,1.25,.35,1), opacity .3s var(--ease);
+}
+.pass.in{opacity:1;}
+.pass::before{ /* muesca de boleto */
+  content:""; position:absolute; left:-11px; right:-11px; top:238px; height:22px;
+  background:radial-gradient(circle at 11px 11px,var(--app-bg) 10px,transparent 11px) left/50% 100% no-repeat,
+             radial-gradient(circle at calc(100% - 11px) 11px,var(--app-bg) 10px,transparent 11px) right/50% 100% no-repeat;
+}
+.pass::after{ /* brillo al llegar */
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);
+  background-size:260% 100%; background-position:140% 0;
+}
+.pass.shine::after{animation:passShine 1s .35s var(--ease) forwards;}
+@keyframes passShine{to{background-position:-140% 0}}
+.pass-head{display:flex; align-items:center; gap:10px; height:56px; padding:0 16px;}
+.pass-logo{width:32px; height:32px; border-radius:7px; flex:none; display:grid; place-items:center; font-size:18px; background:rgba(255,255,255,.22); overflow:hidden;}
+.pass-logo img{width:100%; height:100%; object-fit:cover;}
+.pass-org{flex:1; min-width:0; font-size:15px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.pass-hf{text-align:right;}
+.pass small{display:block; font-size:9.5px; font-weight:700; letter-spacing:.9px; opacity:.72; text-transform:uppercase;}
+.pass-hf b{font-size:15px;}
+.pass-primary{padding:14px 16px 0;}
+.pass-primary b{display:block; font-size:25px; font-weight:800; letter-spacing:-.5px; line-height:1.15; margin-top:3px;}
+.pass-fields{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:18px 16px 0;}
+.pass-fields b{display:block; font-size:14px; font-weight:700; margin-top:3px; line-height:1.25;}
+.pass-qr{position:absolute; left:0; right:0; bottom:18px; text-align:center;}
+.pass-qr .qr{width:112px; height:112px; margin:0 auto; background:#fff; border-radius:10px; padding:8px;}
+/* App tufinde: cabecera, vistas y menú inferior */
+.app-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:54px 20px 8px; background:var(--app-bg);
+}
+.app-logo{height:30px; width:auto;}
+.app-avatar{
+  width:34px; height:34px; border-radius:50%; background:var(--navy); color:#fff;
+  display:grid; place-items:center; font-size:14px; font-weight:700;
+}
+.app-views{position:relative; flex:1; min-height:0;}
+.app-view{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  opacity:0; visibility:hidden; transform:translateY(8px);
+  transition:opacity .28s var(--ease), transform .28s var(--ease), visibility 0s .28s;
+}
+.app-view.on{opacity:1; visibility:visible; transform:none; transition:opacity .28s var(--ease), transform .28s var(--ease);}
+.tabbar{
+  display:grid; grid-template-columns:1fr 1fr;
+  background:rgba(255,255,255,.92); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--line); padding:8px 0 calc(22px + env(safe-area-inset-bottom));
+}
+.tab{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:600; color:var(--ink-3); transition:color .2s;}
+.tab svg{transition:transform .25s var(--spring);}
+.tab.on{color:var(--brand);}
+.tab.on svg{transform:scale(1.08);}
+.tab:active svg{transform:scale(.88);}
+
+/* Explorar */
+.explore-head{padding:14px 20px 4px;}
+.explore-head h2{margin:0; font-size:32px; font-weight:800; letter-spacing:-.8px; color:var(--navy);}
+.explore-head p{margin:3px 0 0; font-size:13.5px; color:var(--ink-2);}
+.chips{display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; padding:12px 20px 10px;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{
+  flex:none; height:32px; padding:0 14px; border-radius:16px; font-size:13px; font-weight:600;
+  background:#fff; color:var(--ink-2); border:1px solid var(--line-2);
+  transition:background .2s, color .2s, border-color .2s, transform .15s var(--spring);
+}
+.chip:active{transform:scale(.94);}
+.chip.on{background:var(--navy); color:#fff; border-color:var(--navy);}
+.exp-list{flex:1; overflow-y:auto; scrollbar-width:none; padding:4px 20px 20px;}
+.exp-list::-webkit-scrollbar{display:none;}
+.exp-card{
+  display:flex; gap:12px; align-items:center; width:100%; text-align:left;
+  background:#fff; border-radius:16px; padding:10px; margin-bottom:10px; box-shadow:var(--shadow-sm);
+  animation:expIn .4s var(--ease) both;
+  transition:transform .18s var(--spring);
+}
+.exp-card:active{transform:scale(.98);}
+@keyframes expIn{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
+.exp-thumb{width:78px; height:78px; border-radius:12px; flex:none; display:grid; place-items:center; font-size:34px; overflow:hidden;}
+.exp-thumb img{width:100%; height:100%; object-fit:cover;}
+.exp-info{flex:1; min-width:0;}
+.exp-info .tag{margin-bottom:5px;}
+.exp-info h4{margin:0; font-size:15.5px; font-weight:700; color:var(--navy); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.exp-info p{margin:3px 0 0; font-size:12.5px; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.exp-foot{display:flex; align-items:center; justify-content:space-between; margin-top:6px; font-size:12.5px; color:var(--ink-2);}
+.exp-foot b{font-size:14.5px; color:var(--ink);}
+.exp-empty{text-align:center; color:var(--ink-3); font-size:13.5px; padding:30px 0;}
+
+.pass-qr span{display:block; margin-top:7px; font-size:11px; letter-spacing:1.4px; opacity:.8;}
 </style>
 </head>
 <body>
@@ -558,20 +686,13 @@ img{display:block; max-width:100%;}
     <section class="screen" id="detail">
       <div class="scroll" id="detailScroll">
 
-        <div class="hero">
-          <div class="hero-base"></div>
-          <div class="hero-bg"></div>
-          <div class="hero-sparkle s1">✦</div>
-          <div class="hero-sparkle s2">✦</div>
-          <div class="hero-sparkle s3">✦</div>
-          <div class="hero-figure">🤹</div>
-          <div class="hero-floor"></div>
+        <div class="hero" id="hero">
+          <img class="hero-img" src="assets/american-circus.webp" alt="American Circus">
 
           <div class="hero-top">
             <button class="round-btn" aria-label="Atrás">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1B1F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <div class="logo-badge"><b>AMERICAN</b><span>CIRCUS</span></div>
             <div class="hero-actions">
               <button class="round-btn fav on" id="favBtn" aria-label="Favorito">
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="#F15A22" stroke="#F15A22" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21.2l7.7-7.8 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
@@ -581,11 +702,11 @@ img{display:block; max-width:100%;}
               </button>
             </div>
           </div>
+        </div>
 
-          <div class="hero-caption">
-            <h1>Circo American</h1>
-            <p>Jokey plaza - Av la marina 222</p>
-          </div>
+        <div class="hero-info">
+          <h1>Circo American</h1>
+          <p>Jokey plaza - Av la marina 222</p>
         </div>
 
         <div class="meta">
@@ -611,43 +732,16 @@ img{display:block; max-width:100%;}
           <div class="eyebrow">LA EXPERIENCIA</div>
           <p class="lead">Una función completa del Circo American para toda la familia: acróbatas, payasos y el gran show del fin de semana. Entrada General Preferente con acceso 30 minutos antes.</p>
 
-          <div class="map-card">
-            <div class="map-head">
-              <span class="mh-left">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
-                Mapa de ruta
-              </span>
-              <span class="mh-right">Ver en mapa</span>
-            </div>
-            <svg class="map-svg" viewBox="0 0 380 210" preserveAspectRatio="xMidYMid slice">
-              <rect width="380" height="210" fill="#E8E4DC"/>
-              <g fill="#DAD5CB">
-                <rect x="14" y="18" width="70" height="46" rx="4"/><rect x="100" y="14" width="86" height="40" rx="4"/>
-                <rect x="206" y="20" width="60" height="50" rx="4"/><rect x="286" y="16" width="78" height="44" rx="4"/>
-                <rect x="20" y="86" width="64" height="54" rx="4"/><rect x="104" y="80" width="90" height="62" rx="4"/>
-                <rect x="212" y="88" width="66" height="48" rx="4"/><rect x="296" y="82" width="66" height="58" rx="4"/>
-                <rect x="24" y="160" width="80" height="40" rx="4"/><rect x="124" y="158" width="96" height="44" rx="4"/>
-                <rect x="240" y="156" width="118" height="46" rx="4"/>
-              </g>
-              <g stroke="#F5F2EC" stroke-width="9" stroke-linecap="round">
-                <path d="M0 74h380M0 150h380M92 0v210M198 0v210M282 0v210"/>
-              </g>
-              <g stroke="#CFC9BE" stroke-width="1"><path d="M0 74h380M0 150h380M92 0v210M198 0v210M282 0v210" stroke-opacity=".5"/></g>
-              <path d="M40 120 Q 70 118 92 112 L 150 96 L 198 88 L 300 84 L 336 96 L 340 150 L 240 156 L 150 150 L 92 146"
-                    fill="none" stroke="#6B2FB5" stroke-width="5.5" class="route"/>
-              <circle cx="40" cy="120" r="7" fill="#6B2FB5" stroke="#fff" stroke-width="2.5"/>
-              <g transform="translate(186 78)">
-                <path d="M0 14 C -7 6 -8 -2 -3 -6 a6 6 0 0 1 6 0 c5 4 4 12 -3 20z" fill="#E03B2E"/>
-                <circle cx="0" cy="-1" r="2.6" fill="#fff"/>
-              </g>
-              <text x="252" y="64" font-size="8" fill="#9A9488" font-family="sans-serif">Av. Javier Prado Este</text>
-              <text x="34" y="46" font-size="8" fill="#9A9488" font-family="sans-serif">NEPTUNO</text>
-            </svg>
-            <div class="map-stats">
-              <div class="map-stat"><small>Distancia</small><b>2.4 km</b></div>
-              <div class="map-stat"><small>Tiempo</small><b>8 min</b></div>
-            </div>
-          </div>
+          <a class="map-card" id="mapLink" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/dir/?api=1&amp;destination=Jockey+Plaza,+Av.+Javier+Prado+Este+4200,+Santiago+de+Surco,+Lima&amp;travelmode=driving"
+             aria-label="Cómo llegar al Jockey Plaza desde tu ubicación">
+            <iframe src="https://www.google.com/maps?q=Jockey+Plaza,+Santiago+de+Surco,+Lima&amp;z=15&amp;output=embed"
+                    loading="lazy" referrerpolicy="no-referrer-when-downgrade" tabindex="-1" title="Mapa Jockey Plaza"></iframe>
+            <span class="map-go">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 11.3l-9-9a1 1 0 0 0-1.4 0l-9 9a1 1 0 0 0 0 1.4l9 9a1 1 0 0 0 1.4 0l9-9a1 1 0 0 0 0-1.4zM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5z"/></svg>
+              Cómo llegar
+            </span>
+          </a>
         </div>
 
         <div class="price-block">
@@ -665,8 +759,7 @@ img{display:block; max-width:100%;}
         </div>
 
         <div class="stack">
-          <button class="btn btn-outline" data-open="plain">Comprar</button>
-          <button class="btn btn-primary" data-open="plain">Crear Paquete</button>
+          <button class="btn btn-primary" data-open="buy">Comprar</button>
         </div>
 
         <div class="combo">
@@ -700,7 +793,7 @@ img{display:block; max-width:100%;}
           <small>COSTO</small>
           <div><span class="bb-price">S/ <span id="detailBarPrice">190</span></span><span class="bb-sub" id="detailBarSub">/ 1 experiencia</span></div>
         </div>
-        <button class="btn btn-outline" data-open="plain">Comprar</button>
+        <button class="btn btn-primary" data-open="buy">Comprar</button>
       </div>
     </section>
 
@@ -766,34 +859,42 @@ img{display:block; max-width:100%;}
 
         <div class="comp-list" id="compList"></div>
 
-        <!-- Premios -->
-        <div class="prize" id="prizeCard">
-          <div class="prize-top">
-            <div class="prize-copy">
-              <h4>Gana premios por la cantidad de ítems añadidos</h4>
-              <div class="won none" id="prizeText">No tienes premios, agrega más ítems para conseguir premios</div>
-            </div>
-            <div class="prize-art" id="prizeArt">🎁</div>
-          </div>
-          <div class="track">
-            <div class="track-line"></div>
-            <div class="track-fill" id="trackFill"></div>
-            <div class="node" id="node2" style="left:8%"><i></i><span>2 Ítems</span></div>
-            <div class="node" id="node3" style="left:50%"><i></i><span>3 Ítems</span></div>
-            <div class="node" id="node5" style="left:92%"><i></i><span>5 Ítems</span></div>
-          </div>
-        </div>
-
         <div style="height:6px"></div>
       </div>
 
       <div class="summary">
+        <!-- Premios -->
+        <div class="prize" id="prizeCard">
+          <button class="prize-mini" id="prizeMini" aria-label="Ver premios">
+            <span id="miniArt">🎁</span>
+            <span class="pm-txt" id="miniText"></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
+          </button>
+          <div class="prize-full">
+            <div class="prize-top">
+              <div class="prize-art" id="prizeArt">🎁</div>
+              <div class="prize-copy">
+                <h4>Gana premios por ítems</h4>
+                <div class="won none" id="prizeText"></div>
+              </div>
+              <button class="prize-toggle" id="prizeHide" aria-label="Minimizar premios">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+            </div>
+            <div class="track">
+              <div class="track-line"></div>
+              <div class="track-fill" id="trackFill"></div>
+              <div class="node" id="node2" style="left:8%"><i></i><span>2 Ítems</span></div>
+              <div class="node" id="node3" style="left:50%"><i></i><span>3 Ítems</span></div>
+              <div class="node" id="node5" style="left:92%"><i></i><span>5 Ítems</span></div>
+            </div>
+          </div>
+          <span class="pm-bar" id="miniFill"></span>
+        </div>
+
         <div class="sum-row">
           <span>Ahorro aplicado</span>
-          <span class="sum-right">
-            <span class="dto-pill" id="dtoPill">S/ <span id="dtoVal">0.00</span> Dto.</span>
-            <span class="sum-save">- S/ <span id="saveVal">0.00</span></span>
-          </span>
+          <span class="dto-pill" id="dtoPill">− S/ <span id="dtoVal">0.00</span></span>
         </div>
         <div class="sum-total">
           <span>Total a pagar</span>
@@ -807,6 +908,71 @@ img{display:block; max-width:100%;}
           </span>
         </button>
       </div>
+    </section>
+
+    <!-- ================= PANTALLA 3 · PAGO ================= -->
+    <section class="screen" id="paying" aria-live="polite">
+      <div>
+        <div class="pay-card">
+          <span class="brand">VISA</span>
+          <span class="chip"></span>
+          <span class="digits">•••• 4821</span>
+        </div>
+        <div class="pay-status">
+          <div class="spinner"></div>
+          <div class="pay-check">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F15A22" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          </div>
+        </div>
+        <h2 id="payTitle">Completando pago con tarjeta guardada<span class="dots"></span></h2>
+        <p id="paySub">S/ 0.00</p>
+        <div class="pay-bar"><i></i></div>
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 4 · BOLETOS ================= -->
+    <section class="screen" id="tickets">
+      <header class="app-head">
+        <img class="app-logo" src="assets/tufinde-logo.png" alt="tufinde">
+        <span class="app-avatar" aria-label="Perfil">F</span>
+      </header>
+
+      <div class="app-views">
+        <!-- Vista: Boletos -->
+        <div class="app-view on" id="viewTickets">
+          <div class="wallet-head">
+            <div>
+              <h2>Boletos</h2>
+              <p id="walletSub">Compra confirmada</p>
+            </div>
+            <button class="wallet-done" id="walletDone">Listo</button>
+          </div>
+          <div class="wallet-scroll">
+            <div class="wallet-stack" id="walletStack"></div>
+          </div>
+        </div>
+
+        <!-- Vista: Explorar -->
+        <div class="app-view" id="viewExplore">
+          <div class="explore-head">
+            <h2>Explorar</h2>
+            <p>Experiencias familiares este fin de semana</p>
+          </div>
+          <div class="chips" id="chips"></div>
+          <div class="exp-list" id="expList"></div>
+        </div>
+      </div>
+
+      <nav class="tabbar">
+        <button class="tab on" data-tab="viewTickets">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14.5 6.5v11" stroke-dasharray="2 2.2"/></svg>
+          Boletos
+        </button>
+        <button class="tab" data-tab="viewExplore">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"/></svg>
+          Explorar
+        </button>
+      </nav>
     </section>
 
     <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAction" hidden>Deshacer</button></div>
@@ -830,9 +996,9 @@ img{display:block; max-width:100%;}
   var DISCOUNT = 0.10; // 10% como complemento
 
   var PRIZES = [
-    { items:2, art:'🍟',    label:'¡Ganaste papas fritas!' },
-    { items:3, art:'🍟🥤',  label:'¡Ganaste papas fritas + gaseosa!' },
-    { items:5, art:'🍗',    label:'¡Ganaste una pieza de pollo!' }
+    { items:2, art:'🍟',    name:'Papas fritas',            label:'¡Ganaste papas fritas!' },
+    { items:3, art:'🍟🥤',  name:'Papas fritas + gaseosa',  label:'¡Ganaste papas fritas + gaseosa!' },
+    { items:5, art:'🍗',    name:'Pieza de pollo',          label:'¡Ganaste una pieza de pollo!' }
   ];
 
   var NODE_POS = { 2:8, 3:50, 5:92 };
@@ -875,6 +1041,68 @@ img{display:block; max-width:100%;}
     f.style.top  = (r.top  - d.top  - 6) + 'px';
     document.querySelector('.device').appendChild(f);
     setTimeout(function(){ f.remove(); }, 1000);
+  }
+
+  /* ---------------- Audio (Web Audio, sin archivos) ---------------- */
+  var actx = null;
+  function audio(){
+    if(!actx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      actx = new AC();
+    }
+    if(actx.state === 'suspended') actx.resume();
+    return actx;
+  }
+  function tone(freq, at, dur, type, vol){
+    var a = audio(); if(!a) return;
+    var o = a.createOscillator(), g = a.createGain(), t = a.currentTime + at;
+    o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.18, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(a.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  // "cling" de ahorro: sube de tono con cada ítem
+  function playSave(count){
+    var k = Math.pow(2, Math.min(count, 8) / 12);
+    tone(988 * k, 0, 0.09, 'square', 0.07);
+    tone(1319 * k, 0.07, 0.32, 'sine', 0.16);
+  }
+  function playPrize(){
+    [523.25, 659.25, 783.99, 1046.5].forEach(function(f, i){ tone(f, i * 0.09, 0.35, 'triangle', 0.16); });
+    tone(1568, 0.38, 0.5, 'sine', 0.1);
+  }
+  function playSuccess(){
+    tone(880, 0, 0.18, 'sine', 0.16); tone(1318.5, 0.12, 0.45, 'sine', 0.16);
+  }
+  function playPass(i){ tone(620 + i * 90, 0, 0.12, 'sine', 0.08); }
+
+  function confetti(){
+    var dev = document.querySelector('.device');
+    var w = dev.clientWidth, h = dev.clientHeight;
+    var colors = ['#F15A22','#F7A03C','#FFD23F','#12945A','#2F6BD8','#E03B7A','#6B2FB5'];
+    for(var i = 0; i < 90; i++){
+      var el = document.createElement('i');
+      el.className = 'confetti';
+      var size = 6 + Math.random() * 6;
+      el.style.width = size + 'px';
+      el.style.height = (size * (Math.random() < .5 ? .45 : 1)) + 'px';
+      el.style.left = (Math.random() * w) + 'px';
+      el.style.background = colors[i % colors.length];
+      if(Math.random() < .3) el.style.borderRadius = '50%';
+      dev.appendChild(el);
+      var drift = (Math.random() - .5) * 160;
+      var rot = (Math.random() - .5) * 1080;
+      var dur = 1500 + Math.random() * 1300;
+      var anim = el.animate([
+        { transform:'translate(0,0) rotate(0deg)', opacity:1 },
+        { transform:'translate(' + drift + 'px,' + (h * .75) + 'px) rotate(' + rot + 'deg)', opacity:1, offset:.8 },
+        { transform:'translate(' + (drift * 1.2) + 'px,' + (h + 30) + 'px) rotate(' + (rot * 1.2) + 'deg)', opacity:0 }
+      ], { duration:dur, delay:Math.random() * 250, easing:'cubic-bezier(.25,.6,.4,1)', fill:'both' });
+      anim.onfinish = (function(e){ return function(){ e.remove(); }; })(el);
+    }
   }
 
   var toastTimer;
@@ -926,6 +1154,7 @@ img{display:block; max-width:100%;}
     sw.setAttribute('aria-checked', String(c.on));
     sw.closest('.comp').classList.toggle('on', c.on);
     floater(sw, c.on ? '+1 ítem' : '−1 ítem');
+    if(c.on) playSave(itemCount());
     update();
   }
 
@@ -974,7 +1203,6 @@ img{display:block; max-width:100%;}
     // precios animados
     animateNumber($('totalVal'), t.total, true);
     animateNumber($('ctaTotal'), t.total, true);
-    animateNumber($('saveVal'), t.save, true);
     animateNumber($('dtoVal'), t.save, true);
     animateNumber($('circoPrice'), BASE.price * BASE.qty, true);
     if(t.save !== parseFloat($('dtoVal').dataset.prev || '0')){
@@ -1001,6 +1229,15 @@ img{display:block; max-width:100%;}
 
     // premio actual
     var tier = tierIndex(count);
+    var next = PRIZES.find(function(p){ return p.items > count; });
+    var missing = next ? next.items - count : 0;
+    var falta = next ? 'falta ' + missing + (missing === 1 ? ' ítem' : ' ítems') : '';
+    $('miniArt').textContent = tier >= 0 ? PRIZES[tier].art : '🎁';
+    $('miniText').innerHTML = tier < 0
+      ? 'Sin premio · ' + falta + ' para tu primer premio'
+      : (next ? '<b>Premio ganado</b> (' + falta + ' para el siguiente premio)'
+              : '<b>¡Premio máximo ganado!</b>');
+    $('miniFill').style.width = fillPercent(count) + '%';
     var art = $('prizeArt'), txt = $('prizeText');
     if(tier >= 0){
       art.textContent = PRIZES[tier].art;
@@ -1010,7 +1247,7 @@ img{display:block; max-width:100%;}
     } else {
       art.textContent = '🎁';
       art.classList.remove('active');
-      txt.textContent = 'No tienes premios, agrega más ítems para conseguir premios';
+      txt.textContent = 'Agrega ' + missing + (missing === 1 ? ' ítem más' : ' ítems más') + ' para tu primer premio';
       txt.classList.add('none');
     }
     if(tier !== lastTier){
@@ -1018,7 +1255,9 @@ img{display:block; max-width:100%;}
         art.classList.remove('pop'); void art.offsetWidth; art.classList.add('pop');
         var card = $('prizeCard');
         card.classList.remove('celebrate'); void card.offsetWidth; card.classList.add('celebrate');
-        toast('🎉 ' + PRIZES[tier].label);
+        $('prizeCard').classList.remove('min');
+        confetti();
+        playPrize();
       }
       lastTier = tier;
     }
@@ -1052,17 +1291,25 @@ img{display:block; max-width:100%;}
       var b = COMPLEMENTS.find(function(c){ return c.id === 'bembos'; });
       if(!b.on){ b.on = true; renderComplements(); }
     }
+    if(mode === 'buy'){
+      // Comprar: abre el paquete solo con la experiencia, sin complementos
+      COMPLEMENTS.forEach(function(c){ c.on = false; });
+      renderComplements();
+    }
     $('bundle').classList.add('open');
     $('scrim').classList.add('on');
     $('detail').classList.add('pushed');
     $('statusbar').classList.remove('on-dark');
+    $('prizeCard').classList.remove('min');
+    lastSheetY = $('sheetScroll').scrollTop = 0;
     update();
   }
+  function heroLimit(){ return $('hero').offsetHeight - 52; }
   function closeSheet(){
     $('bundle').classList.remove('open');
     $('scrim').classList.remove('on');
     $('detail').classList.remove('pushed');
-    if($('detailScroll').scrollTop < 260) $('statusbar').classList.add('on-dark');
+    $('statusbar').classList.toggle('on-dark', $('detailScroll').scrollTop < heroLimit());
     hideToast();
   }
   Array.prototype.forEach.call(document.querySelectorAll('[data-open]'), function(btn){
@@ -1074,14 +1321,26 @@ img{display:block; max-width:100%;}
   // status bar clara/oscura según scroll del hero
   $('detailScroll').addEventListener('scroll', function(){
     if($('bundle').classList.contains('open')) return;
-    $('statusbar').classList.toggle('on-dark', this.scrollTop < 260);
+    $('statusbar').classList.toggle('on-dark', this.scrollTop < heroLimit());
   });
+
+  // premios: scroll hacia abajo → visibles · scroll hacia arriba → rayita
+  var lastSheetY = 0;
+  $('sheetScroll').addEventListener('scroll', function(){
+    var y = this.scrollTop, d = y - lastSheetY;
+    if(Math.abs(d) < 6) return;
+    $('prizeCard').classList.toggle('min', d < 0);
+    lastSheetY = y;
+  });
+  $('prizeMini').addEventListener('click', function(){ $('prizeCard').classList.remove('min'); });
+  $('prizeHide').addEventListener('click', function(){ $('prizeCard').classList.add('min'); });
 
   /* ---------------- Stepper / eliminar ---------------- */
   $('plusBtn').addEventListener('click', function(){
     if(BASE.qty >= 5) return;
     BASE.qty++; BASE.active = true;
     floater(this, '+1 ítem');
+    playSave(itemCount());
     $('detailQty').value = Math.min(BASE.qty, 3);
     syncDetail(); update();
   });
@@ -1106,13 +1365,192 @@ img{display:block; max-width:100%;}
 
   $('filterSel').addEventListener('change', applyFilter);
 
+  /* ---------------- Pago + boletos ---------------- */
+  var paying = false;
   $('ctaBtn').addEventListener('click', function(){
-    var t = totals(), c = itemCount();
-    toast('Compra simulada · ' + c + (c === 1 ? ' ítem' : ' ítems') + ' · S/ ' + money(t.total));
+    if(paying) return;
+    if(itemCount() === 0){ toast('Agrega al menos un ítem'); return; }
+    paying = true;
+    audio(); // desbloquea el audio con el gesto del usuario
+    var t = totals();
+    hideToast();
+    var pay = $('paying');
+    pay.classList.remove('done', 'run');
+    $('payTitle').innerHTML = 'Completando pago con tarjeta guardada<span class="dots"></span>';
+    $('paySub').textContent = 'S/ ' + money(t.total) + ' · Visa •••• 4821';
+    pay.classList.add('show');
+    $('statusbar').classList.add('on-dark');
+    void pay.offsetWidth; pay.classList.add('run');
+
+    setTimeout(function(){
+      pay.classList.add('done');
+      $('payTitle').textContent = '¡Pago aprobado!';
+      playSuccess();
+    }, 2700);
+    setTimeout(function(){ showTickets(t.total); }, 3700);
   });
+
+  function passesData(){
+    var list = [];
+    if(BASE.active){
+      list.push({ c1:'#E0262B', c2:'#A3121A', logo:'<img src="assets/american-circus.webp" alt="">',
+        org:'American Circus', hl:'Fecha', hv:'18 MAR', pl:'Evento', pv:'Circo American',
+        fields:[['Entradas', '×' + BASE.qty], ['Hora', '4:00 PM'], ['Lugar', 'Jockey Plaza']],
+        code:'CIRCO-' + BASE.qty });
+    }
+    COMPLEMENTS.forEach(function(c){
+      if(!c.on) return;
+      var pal = { bembos:['#2B5CC4','#173A86'], pizza:['#2E8B57','#1B5E3B'], popeyes:['#F07A1F','#B8520C'], museo:['#4A505E','#262A33'] }[c.id];
+      list.push({ c1:pal[0], c2:pal[1], logo:c.emoji, org:c.name, hl:'Pagado', hv:'S/ ' + money(c.price * (1 - DISCOUNT)),
+        pl:c.tag === 'Comida' ? 'Complemento' : 'Experiencia', pv:c.name.replace('Almuerzo ', ''),
+        fields:[['Incluye', c.desc], ['Válido', 'Sáb 18 Mar'], ['Dto.', '10%']], code:c.id.toUpperCase() });
+    });
+    var tier = tierIndex(itemCount());
+    if(tier >= 0){
+      var pz = PRIZES[tier];
+      list.push({ c1:'#FFD66B', c2:'#F2A93B', fg:'#3B2303', logo:pz.art.slice(0, 2), org:'Premio findeCompra',
+        hl:'Valor', hv:'Gratis', pl:'Premio', pv:pz.name,
+        fields:[['Por', itemCount() + ' ítems'], ['Canje', 'Jockey Plaza'], ['Válido', 'Sáb 18 Mar']], code:'PREMIO-' + pz.items });
+    }
+    return list;
+  }
+
+  // QR decorativo determinístico (no es un QR real)
+  function qrSvg(seed){
+    var n = 25, h = 0, i, x, y, d = '';
+    for(i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    function rnd(){ h ^= h << 13; h >>>= 0; h ^= h >> 17; h ^= h << 5; h >>>= 0; return h / 4294967296; }
+    function finder(fx, fy){ return fx >= 0 && fy >= 0 && fx < 7 && fy < 7; }
+    for(y = 0; y < n; y++) for(x = 0; x < n; x++){
+      var on, f = null;
+      if(finder(x, y)) f = [x, y]; else if(finder(x - (n - 7), y)) f = [x - (n - 7), y]; else if(finder(x, y - (n - 7))) f = [x, y - (n - 7)];
+      if(f){ var a = f[0], b = f[1]; on = a === 0 || b === 0 || a === 6 || b === 6 || (a >= 2 && a <= 4 && b >= 2 && b <= 4); }
+      else if((x < 8 && (y < 8 || y > n - 9)) || (x > n - 9 && y < 8)) on = false;
+      else on = rnd() < .5;
+      if(on) d += 'M' + x + ' ' + y + 'h1v1h-1z';
+    }
+    return '<svg class="qrsvg" viewBox="0 0 ' + n + ' ' + n + '" width="96" height="96" shape-rendering="crispEdges"><path d="' + d + '" fill="#000"/></svg>';
+  }
+
+  var PEEK = 58, PASS_H = 430, selected = 0;
+  function layoutPasses(){
+    var passes = document.querySelectorAll('.pass'), k = 0;
+    Array.prototype.forEach.call(passes, function(p, i){
+      var y;
+      if(i === selected) y = (passes.length - 1) * PEEK + (passes.length > 1 ? 14 : 0);
+      else y = (k++) * PEEK;
+      p.style.zIndex = i === selected ? 50 : 10 + i;
+      p.dataset.y = y;
+      if(p.classList.contains('in')) p.style.transform = 'translateY(' + y + 'px)';
+    });
+    $('walletStack').style.height = ((passes.length - 1) * PEEK + (passes.length > 1 ? 14 : 0) + PASS_H) + 'px';
+  }
+
+  function showTickets(total){
+    var stack = $('walletStack'), data = passesData();
+    stack.innerHTML = '';
+    data.forEach(function(d, i){
+      var el = document.createElement('div');
+      el.className = 'pass';
+      el.style.setProperty('--c1', d.c1); el.style.setProperty('--c2', d.c2);
+      if(d.fg) el.style.setProperty('--fg', d.fg);
+      el.innerHTML =
+        '<div class="pass-head"><div class="pass-logo">' + d.logo + '</div><div class="pass-org">' + d.org + '</div>' +
+          '<div class="pass-hf"><small>' + d.hl + '</small><b>' + d.hv + '</b></div></div>' +
+        '<div class="pass-primary"><small>' + d.pl + '</small><b>' + d.pv + '</b></div>' +
+        '<div class="pass-fields">' + d.fields.map(function(f){ return '<div><small>' + f[0] + '</small><b>' + f[1] + '</b></div>'; }).join('') + '</div>' +
+        '<div class="pass-qr"><div class="qr">' + qrSvg(d.code) + '</div><span>' + d.code + ' · 0' + (4821 + i * 137) + '</span></div>';
+      el.addEventListener('click', function(){ selected = i; layoutPasses(); });
+      stack.appendChild(el);
+    });
+    selected = data.length - 1;   // el último en llegar queda al frente
+    layoutPasses();
+    $('walletSub').textContent = data.length + (data.length === 1 ? ' boleto' : ' boletos') + ' · S/ ' + money(total) + ' pagado';
+    setTab('viewTickets');
+    $('tickets').classList.add('show');
+    $('statusbar').classList.remove('on-dark');
+    $('tickets').querySelector('.wallet-scroll').scrollTop = 0;
+
+    // los boletos van apareciendo uno a uno
+    Array.prototype.forEach.call(stack.querySelectorAll('.pass'), function(p, i){
+      setTimeout(function(){
+        p.classList.add('in', 'shine');
+        p.style.transform = 'translateY(' + p.dataset.y + 'px)';
+        playPass(i);
+        setTimeout(function(){ p.classList.remove('shine'); }, 1500);
+      }, 450 + i * 260);
+    });
+    setTimeout(function(){ $('paying').classList.remove('show', 'run', 'done'); }, 700);
+  }
+
+  /* ---------------- App tufinde: menú inferior + Explorar ---------------- */
+  var EXPERIENCES = [
+    { id:'circo',   name:'Circo American',            place:'Jockey Plaza · Surco',            cat:'Shows',      price:190, rating:4.9, img:'assets/american-circus.webp' },
+    { id:'agua',    name:'Circuito Mágico del Agua',  place:'Parque de la Reserva · Lima',     cat:'Aire libre', price:4,   rating:4.7, emoji:'⛲', cls:'t-water' },
+    { id:'leyendas',name:'Parque de las Leyendas',    place:'San Miguel',                      cat:'Aire libre', price:25,  rating:4.6, emoji:'🦒', cls:'t-zoo' },
+    { id:'titeres', name:'Show de títeres',           place:'Miraflores',                      cat:'Shows',      price:35,  rating:4.8, emoji:'🎭', cls:'t-circus' },
+    { id:'ciencia', name:'Museo interactivo de ciencias', place:'Barranco',                    cat:'Museos',     price:30,  rating:4.7, emoji:'🔬', cls:'t-museum' },
+    { id:'cocina',  name:'Taller de cocina para niños', place:'Surco',                         cat:'Talleres',   price:60,  rating:4.9, emoji:'👩‍🍳', cls:'t-food' },
+    { id:'granja',  name:'Granja de animales',        place:'Pachacámac',                      cat:'Aire libre', price:40,  rating:4.8, emoji:'🐐', cls:'t-farm' }
+  ];
+  var CATS = ['Todo', 'Shows', 'Aire libre', 'Museos', 'Talleres'];
+  var currentCat = 'Todo';
+
+  function renderChips(){
+    $('chips').innerHTML = CATS.map(function(c){
+      return '<button class="chip' + (c === currentCat ? ' on' : '') + '" data-cat="' + c + '">' + c + '</button>';
+    }).join('');
+  }
+  function renderExplore(){
+    var items = EXPERIENCES.filter(function(e){ return currentCat === 'Todo' || e.cat === currentCat; });
+    $('expList').innerHTML = items.length ? items.map(function(e, i){
+      var thumb = e.img ? '<img src="' + e.img + '" alt="">' : e.emoji;
+      return '<button class="exp-card" data-id="' + e.id + '" style="animation-delay:' + (i * 50) + 'ms">' +
+        '<div class="exp-thumb ' + (e.cls || '') + '">' + thumb + '</div>' +
+        '<div class="exp-info">' +
+          '<span class="tag' + (e.cat === 'Museos' ? ' exp' : '') + '">' + e.cat + '</span>' +
+          '<h4>' + e.name + '</h4>' +
+          '<p>' + e.place + ' · Sáb 18 Mar</p>' +
+          '<div class="exp-foot"><span>★ ' + e.rating.toFixed(1) + '</span><span>desde <b>S/ ' + e.price + '</b></span></div>' +
+        '</div></button>';
+    }).join('') : '<div class="exp-empty">No hay experiencias en esta categoría</div>';
+  }
+  $('chips').addEventListener('click', function(ev){
+    var b = ev.target.closest('.chip'); if(!b) return;
+    currentCat = b.dataset.cat;
+    renderChips(); renderExplore();
+    $('expList').scrollTop = 0;
+  });
+  $('expList').addEventListener('click', function(ev){
+    var b = ev.target.closest('.exp-card'); if(!b) return;
+    if(b.dataset.id === 'circo') backToDetail();
+    else toast('Próximamente en tufinde');
+  });
+
+  function setTab(id){
+    Array.prototype.forEach.call(document.querySelectorAll('.app-view'), function(v){ v.classList.toggle('on', v.id === id); });
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){ t.classList.toggle('on', t.dataset.tab === id); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+    t.addEventListener('click', function(){ setTab(t.dataset.tab); });
+  });
+
+  // vuelve al detalle con el flujo reiniciado
+  function backToDetail(){
+    $('tickets').classList.remove('show');
+    BASE.qty = 1; BASE.active = true;
+    COMPLEMENTS.forEach(function(c){ c.on = false; });
+    $('detailQty').value = 1;
+    renderComplements(); syncDetail(); update();
+    closeSheet();
+    paying = false;
+  }
+  $('walletDone').addEventListener('click', backToDetail);
 
   /* ---------------- Init ---------------- */
   renderComplements();
+  renderChips();
+  renderExplore();
   syncDetail();
   update();
 })();
