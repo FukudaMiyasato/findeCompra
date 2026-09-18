@@ -27,12 +27,19 @@ Prototipo web (mobile first, estilo iOS) de cuatro pantallas:
 
 Cada complemento muestra su **distancia al evento principal** (valores de ejemplo, todos a menos de 1 km: 300–900 m; complementos: Bembos, Pizza Hut, Popeyes,
 Museo contemporáneo, Playland Park y Teatro)
-y el horario para **reclamarlo: de 3 pm a 12 pm**. Ambos datos también salen en su boleto.
+y **hasta cuándo o en qué horario reclamarlo**. Ambos datos también salen en su boleto:
+
+| Complemento | Reclamar |
+|---|---|
+| Bembos, Pizza Hut, Popeyes (comida) | hasta 15 de dic |
+| Museo contemporáneo | de 1 pm a 6 pm |
+| Playland Park | hasta 15 de dic |
+| Teatro | de 6 am a 8 am |
 
 **Teatro** es el complemento *Recomendado*: borde dorado redondeado, un descuento extra
-(~~S/ 30~~ → ~~S/ 27~~ → **S/ 25** en dorado, que es lo que se cobra), etiqueta amarilla junto a *Experiencia* y el
+(~~S/ 30~~ → ~~S/ 27~~ → **S/ 25** en dorado, que es lo que se cobra), etiquetas *Recomendado* (amarilla) y *Merlin* junto a *Experiencia*, y el
 personaje recomendador (`assets/recomendador.webp`) por encima de su foto, anclado a la esquina
-inferior izquierda (tapa un poco el texto a propósito).
+inferior izquierda y recortado por el borde de la tarjeta, para que se vea apoyado y no flotando.
 
 En la cabecera de *Completa tu experiencia* hay un botón de radio (**3 km** por defecto) que
 abre un menú para elegir 1, 3, 5 o 10 km. Por ahora es solo visual: no filtra nada.

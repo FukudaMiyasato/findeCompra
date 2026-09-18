@@ -373,6 +373,9 @@ img{display:block; max-width:100%;}
 }
 .comp-txt .tags{display:flex; gap:5px; margin-bottom:5px; white-space:nowrap;}
 .comp-txt .rec-tag{background:#FFD84D; color:#5A4200;}
+.comp-txt .badge-tag{background:#EFE6FB; color:#5B1FA0;}
+.comp.rec .tags{position:relative; z-index:4; gap:4px;}
+.comp.rec .tags .tag{font-size:10.5px; padding:3px 7px;}
 /* Complemento recomendado: personaje por encima de la foto, anclado abajo a la izquierda */
 .comp.rec{
   position:relative; margin-top:8px;
@@ -381,9 +384,13 @@ img{display:block; max-width:100%;}
   box-shadow:0 4px 14px rgba(201,150,43,.18);
 }
 .comp.rec.on{background:linear-gradient(var(--orange-soft),var(--orange-soft)) padding-box, linear-gradient(135deg,#F7D774,#C9962B 45%,#F3D27A 70%,#B7851F) border-box;}
-.rec-avatar{
-  position:absolute; left:-12px; bottom:0; z-index:3; height:118px; width:auto;
-  pointer-events:none; filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));
+.rec-avatar{ /* recorta al personaje en el borde inferior de la tarjeta */
+  position:absolute; left:0; bottom:0; z-index:3; width:104px; height:150px;
+  overflow:hidden; border-bottom-left-radius:14px; pointer-events:none;
+}
+.rec-avatar img{
+  position:absolute; left:-10px; bottom:-7px; height:118px; width:auto;
+  filter:drop-shadow(2px 0 4px rgba(0,0,0,.14));
 }
 .comp-txt p{
   margin:3px 0 0; font-size:12.5px; color:var(--ink-2);
@@ -1137,12 +1144,12 @@ img{display:block; max-width:100%;}
   var BASE = { name:'El Circo', price:190.00, qty:1, active:true };
 
   var COMPLEMENTS = [
-    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'800 m', km:0.8, bearing:300, on:false },
-    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'500 m', km:0.5, bearing:20, on:false },
-    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'300 m', km:0.3, bearing:140, on:false },
-    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'900 m', km:0.9, bearing:250, on:false },
-    { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'600 m', km:0.6, bearing:80, on:false },
-    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, recommended:true, recPrice:25.00, on:false }
+    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'800 m', km:0.8, bearing:300, claim:'hasta 15 de dic', on:false },
+    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'500 m', km:0.5, bearing:20, claim:'hasta 15 de dic', on:false },
+    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'300 m', km:0.3, bearing:140, claim:'hasta 15 de dic', on:false },
+    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'900 m', km:0.9, bearing:250, claim:'de 1 pm a 6 pm', on:false },
+    { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'600 m', km:0.6, bearing:80, claim:'hasta 15 de dic', on:false },
+    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'400 m', km:0.4, bearing:200, recommended:true, badge:'Merlin', recPrice:25.00, claim:'de 6 am a 8 am', on:false }
   ];
 
   var DISCOUNT = 0.10; // 10% como complemento
@@ -1157,7 +1164,6 @@ img{display:block; max-width:100%;}
   ];
   var MAX_ITEMS = 10;                           // tope de entradas en el stepper
   var TRACK_MAX = PRIZES[PRIZES.length - 1].items; // último premio = final de la barra
-  var CLAIM = '3 pm – 12 pm';   // horario para reclamar complementos
 
   // posición (%) de cada cantidad de ítems en la barra de premios
   // 1 ítem = inicio (0 %), último premio = final (100 %)
@@ -1289,18 +1295,19 @@ img{display:block; max-width:100%;}
         '<div class="thumb ' + c.cls + '">' + c.emoji + '</div>' +
         '<div class="comp-txt">' +
           '<div class="tags"><span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
-          (c.recommended ? '<span class="tag rec-tag">Recomendado</span>' : '') + '</div>' +
+          (c.recommended ? '<span class="tag rec-tag">Recomendado</span>' : '') +
+          (c.badge ? '<span class="tag badge-tag">' + c.badge + '</span>' : '') + '</div>' +
           '<h4>' + c.name + '</h4>' +
           '<p>' + c.desc + '</p>' +
           '<div class="comp-meta">' +
             '<span><b>Distancia</b> ' + c.dist + ' del evento</span>' +
-            '<span><b>Reclamar</b> de ' + CLAIM + '</span>' +
+            '<span><b>Reclamar</b> ' + c.claim + '</span>' +
           '</div>' +
         '</div>' +
         '<div class="comp-price"><s>S/ ' + money(c.price) + '</s>' +
           (c.recPrice ? '<s>S/ ' + money(c.price * (1 - DISCOUNT)) + '</s><b class="gold">S/ ' + money(c.recPrice) + '</b>'
                       : '<b>S/ ' + money(compPrice(c)) + '</b>') + '</div>' +
-        (c.recommended ? '<img class="rec-avatar" src="assets/recomendador.webp" alt="">' : '') +
+        (c.recommended ? '<div class="rec-avatar"><img src="assets/recomendador.webp" alt=""></div>' : '') +
         '<div class="switch' + (c.on ? ' on' : '') + '" role="switch" aria-checked="' + c.on + '" tabindex="0"></div>';
       row.querySelector('.switch').addEventListener('click', function(){ toggle(c.id, this); });
       list.appendChild(row);
@@ -1572,7 +1579,7 @@ img{display:block; max-width:100%;}
   function planText(){
     var order = currentOrder();
     var lines = ['Mi plan tufinde · Sáb 18 Mar', '★ Circo American · Jockey Plaza'];
-    order.forEach(function(c, i){ lines.push((i + 1) + '. ' + c.name + ' (' + c.dist + ' del evento, reclamar ' + CLAIM + ')'); });
+    order.forEach(function(c, i){ lines.push((i + 1) + '. ' + c.name + ' (' + c.dist + ' del evento, reclamar ' + c.claim + ')'); });
     if(order.length) lines.push('Ruta: ' + fmtDist(routeKm(order)) + ' a pie');
     lines.push('Total: S/ ' + money(totals().total));
     return lines.join('\n');
@@ -1750,7 +1757,7 @@ img{display:block; max-width:100%;}
       var pal = { bembos:['#2B5CC4','#173A86'], pizza:['#2E8B57','#1B5E3B'], popeyes:['#F07A1F','#B8520C'], museo:['#4A505E','#262A33'], playland:['#8E44C4','#55267F'], teatro:['#1F8A9C','#10505C'] }[c.id];
       list.push({ c1:pal[0], c2:pal[1], logo:c.emoji, org:c.name, hl:'Pagado', hv:'S/ ' + money(compPrice(c)),
         pl:c.tag === 'Comida' ? 'Complemento' : 'Experiencia', pv:c.name.replace('Almuerzo ', ''),
-        fields:[['Reclamar', CLAIM], ['Distancia', c.dist], ['Dto.', '10%']], code:c.id.toUpperCase() });
+        fields:[['Reclamar', c.claim], ['Distancia', c.dist], ['Dto.', '10%']], code:c.id.toUpperCase() });
     });
     return list;
   }
