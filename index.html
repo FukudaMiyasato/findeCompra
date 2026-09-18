@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FAF7F2">
+<title>findeCompra — Circo American</title>
+<style>
+/* ============================================================
+   findeCompra · Prototipo iOS
+   Detalle de experiencia → Crea tu paquete (complementos)
+   ============================================================ */
+
+:root{
+  --orange:#F15A22;
+  --orange-dark:#D94A15;
+  --orange-soft:#FFF1EA;
+  --ink:#1B1B1F;
+  --ink-2:#5B5B66;
+  --ink-3:#8E8E99;
+  --line:#EDE8E1;
+  --line-2:#E3DDD4;
+  --bg:#FAF7F2;
+  --card:#FFFFFF;
+  --green:#12945A;
+  --green-soft:#DCF3E5;
+  --purple:#6B2FB5;
+  --radius:16px;
+  --radius-lg:22px;
+  --shadow-sm:0 1px 2px rgba(27,27,31,.06), 0 4px 12px rgba(27,27,31,.05);
+  --shadow-md:0 6px 24px rgba(27,27,31,.10);
+  --shadow-lg:0 -8px 40px rgba(27,27,31,.16);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:var(--font);
+  color:var(--ink);
+  background:#20232A;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+img{display:block; max-width:100%;}
+
+/* ---------- Marco de dispositivo ---------- */
+.device{
+  position:relative;
+  width:420px; height:min(910px, 100vh);
+  background:var(--bg);
+  border-radius:44px;
+  overflow:hidden;
+  box-shadow:0 0 0 11px #111318, 0 0 0 13px #33363F, 0 40px 90px rgba(0,0,0,.55);
+  display:flex; flex-direction:column;
+}
+@media (max-width:460px), (max-height:700px){
+  body{background:var(--bg);}
+  .device{width:100%; height:100%; border-radius:0; box-shadow:none;}
+  .notch{display:none;}
+}
+
+/* ---------- Status bar ---------- */
+.statusbar{
+  position:absolute; top:0; left:0; right:0; height:52px; z-index:60;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 30px 0;
+  font-size:15px; font-weight:600; letter-spacing:.2px;
+  color:var(--ink); pointer-events:none;
+  transition:color .35s var(--ease);
+}
+.statusbar.on-dark{color:#fff;}
+.status-right{display:flex; align-items:center; gap:6px;}
+.status-right svg{display:block;}
+.notch{
+  position:absolute; top:9px; left:50%; transform:translateX(-50%);
+  width:118px; height:32px; background:#111318; border-radius:20px; z-index:70;
+}
+
+/* ---------- Contenedor de pantallas ---------- */
+.screens{position:relative; flex:1; overflow:hidden;}
+.screen{position:absolute; inset:0; display:flex; flex-direction:column;}
+
+/* ============================================================
+   PANTALLA 1 · DETALLE
+   ============================================================ */
+#detail{
+  background:var(--bg);
+  transform-origin:50% 0%;
+  transition:transform .48s var(--ease), border-radius .48s var(--ease), filter .48s var(--ease);
+}
+#detail.pushed{
+  transform:scale(.912) translateY(14px);
+  border-radius:24px; overflow:hidden;
+  filter:brightness(.72);
+}
+.scroll{
+  flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.scroll::-webkit-scrollbar{display:none;}
+
+/* Hero */
+.hero{position:relative; height:330px; overflow:hidden; background:#2A0B4E;}
+.hero-bg{position:absolute; inset:0;}
+.hero-bg::before{ /* halo de reflectores */
+  content:""; position:absolute; inset:-30% -10% 0;
+  background:
+    radial-gradient(60% 55% at 22% 38%, rgba(255,255,255,.95) 0%, rgba(214,180,255,.45) 18%, rgba(120,40,190,0) 55%),
+    radial-gradient(38% 44% at 72% 28%, rgba(255,214,120,.55) 0%, rgba(255,120,60,0) 60%);
+  filter:blur(2px);
+}
+.hero-bg::after{ /* rayos */
+  content:""; position:absolute; inset:0;
+  background:repeating-conic-gradient(from 200deg at 22% 40%,
+    rgba(255,255,255,.14) 0deg 4deg, rgba(255,255,255,0) 4deg 13deg);
+  mix-blend-mode:screen; opacity:.75;
+}
+.hero-base{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg,#4B1188 0%, #6A22B6 34%, #8B2FA8 58%, #3E0C6B 100%);
+}
+.hero-floor{
+  position:absolute; left:0; right:0; bottom:0; height:96px;
+  background:linear-gradient(180deg, rgba(20,4,40,0) 0%, rgba(20,4,40,.75) 70%, rgba(20,4,40,.92) 100%);
+}
+.hero-figure{
+  position:absolute; left:50%; bottom:88px; transform:translateX(-50%);
+  font-size:96px; line-height:1;
+  filter:drop-shadow(0 12px 26px rgba(0,0,0,.55));
+  animation:heroFloat 5.5s ease-in-out infinite;
+}
+@keyframes heroFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+.hero-sparkle{position:absolute; font-size:22px; opacity:.85; animation:twinkle 3.2s ease-in-out infinite;}
+.hero-sparkle.s1{left:16%; top:34%;}
+.hero-sparkle.s2{right:18%; top:26%; animation-delay:.8s;}
+.hero-sparkle.s3{right:32%; top:48%; animation-delay:1.6s; font-size:16px;}
+@keyframes twinkle{0%,100%{opacity:.25; transform:scale(.85)}50%{opacity:1; transform:scale(1.1)}}
+
+.hero-top{
+  position:absolute; top:58px; left:16px; right:16px; z-index:12;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.round-btn{
+  width:42px; height:42px; border-radius:50%;
+  background:rgba(255,255,255,.96); display:grid; place-items:center;
+  box-shadow:0 3px 12px rgba(0,0,0,.22);
+  transition:transform .2s var(--spring);
+}
+.round-btn:active{transform:scale(.88);}
+.round-btn.fav.on svg{fill:var(--orange); stroke:var(--orange);}
+.hero-actions{display:flex; gap:10px;}
+.logo-badge{
+  position:absolute; top:58px; left:50%; transform:translateX(-50%); z-index:11;
+  background:linear-gradient(180deg,#1F4FA8,#12357A);
+  border:2px solid #E8C05A; border-radius:8px;
+  padding:6px 14px 7px; text-align:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+}
+.logo-badge b{
+  display:block; font-size:16px; letter-spacing:.5px; color:#fff;
+  text-shadow:0 2px 0 #B23A12; font-family:Georgia, serif;
+}
+.logo-badge span{display:block; font-size:8px; letter-spacing:4px; color:#E8C05A;}
+
+.hero-caption{
+  position:absolute; left:16px; right:16px; bottom:18px; z-index:12;
+  background:rgba(18,12,26,.6);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-radius:14px; padding:14px 16px;
+}
+.hero-caption h1{margin:0; font-size:25px; font-weight:800; letter-spacing:-.4px; color:#fff;}
+.hero-caption p{margin:4px 0 0; font-size:13.5px; color:rgba(255,255,255,.82);}
+
+/* Meta row */
+.meta{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
+  padding:18px 14px 16px;
+}
+.meta div{display:flex; flex-direction:column; align-items:center; gap:7px; text-align:center;}
+.meta span{font-size:11.5px; color:var(--ink-2); font-weight:500; line-height:1.25;}
+.meta svg{stroke:var(--ink); }
+
+.section{padding:0 20px;}
+.eyebrow{
+  font-size:11.5px; font-weight:700; letter-spacing:1.1px; color:var(--ink-2);
+  margin:8px 0 8px;
+}
+.lead{margin:0; font-size:15px; line-height:1.55; color:#3A3A44;}
+
+/* Mapa */
+.map-card{
+  margin:16px 0 4px; border-radius:var(--radius); overflow:hidden;
+  position:relative; background:#D9D6D0; box-shadow:var(--shadow-sm);
+}
+.map-head{
+  position:absolute; top:0; left:0; right:0; z-index:3;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px; color:#fff; font-size:13px; font-weight:600;
+  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0));
+}
+.map-head .mh-left{display:flex; align-items:center; gap:7px;}
+.map-head .mh-right{font-size:12px; font-weight:500; opacity:.92;}
+.map-svg{display:block; width:100%; height:210px;}
+.route{stroke-dasharray:1 7; stroke-linecap:round; animation:dash 22s linear infinite;}
+@keyframes dash{to{stroke-dashoffset:-320;}}
+.map-stats{
+  position:absolute; left:10px; right:10px; bottom:10px; z-index:3;
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.map-stat{
+  background:rgba(255,255,255,.93); backdrop-filter:blur(8px);
+  border-radius:12px; padding:9px 12px;
+}
+.map-stat small{display:block; font-size:11px; color:var(--ink-2); margin-bottom:2px;}
+.map-stat b{font-size:15px; font-weight:700;}
+
+/* Precio */
+.price-block{padding:22px 20px 0;}
+.price-row{display:flex; align-items:baseline; gap:5px;}
+.price-row .cur{font-size:15px; font-weight:600; color:var(--ink-2);}
+.price-row .amt{font-size:38px; font-weight:800; letter-spacing:-1.2px;}
+.price-note{margin:6px 0 0; font-size:13.5px; color:#2F6BD8;}
+.stock{margin:10px 0 0; font-size:14px; font-weight:700; color:var(--green);}
+
+.qty-select{
+  margin:14px 0 0; width:100%; height:52px;
+  background:#F1EEE9; border:1px solid var(--line-2); border-radius:12px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px; font-size:14.5px; font-weight:500;
+}
+.qty-select select{
+  appearance:none; background:none; border:none; font:inherit; color:inherit;
+  outline:none; width:100%; height:100%; cursor:pointer;
+}
+.qty-select svg{flex:none; margin-left:8px;}
+
+.btn{
+  width:100%; height:54px; border-radius:28px;
+  font-size:16.5px; font-weight:700; letter-spacing:-.1px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:transform .18s var(--spring), box-shadow .2s var(--ease), background .2s;
+}
+.btn:active{transform:scale(.975);}
+.btn-outline{background:#fff; color:var(--orange); border:1.8px solid var(--orange);}
+.btn-primary{background:var(--orange); color:#fff; box-shadow:0 6px 16px rgba(241,90,34,.30);}
+.stack{display:grid; gap:12px; padding:16px 20px 0;}
+
+/* Combo */
+.combo{
+  margin:20px 20px 0; background:#fff; border:1.5px solid #FBD9C6;
+  border-radius:var(--radius-lg); padding:16px; box-shadow:var(--shadow-sm);
+}
+.combo-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+.combo-tag{display:flex; align-items:center; gap:7px; font-size:11.5px; font-weight:700; letter-spacing:.8px; color:var(--orange);}
+.pill-green{background:var(--green-soft); color:var(--green); font-size:12px; font-weight:700; padding:5px 10px; border-radius:20px;}
+.combo-body{display:flex; align-items:center; gap:10px; padding-top:14px; border-top:1px solid var(--line);}
+.thumb{
+  width:58px; height:58px; border-radius:10px; flex:none;
+  display:grid; place-items:center; font-size:27px; overflow:hidden;
+}
+.t-circus{background:linear-gradient(145deg,#5B18A3,#B23AA8);}
+.t-food{background:linear-gradient(145deg,#E8A33D,#C2521B);}
+.t-pizza{background:linear-gradient(145deg,#E86A2B,#B8341A);}
+.t-chicken{background:linear-gradient(145deg,#D9452E,#8E1F13);}
+.t-museum{background:linear-gradient(145deg,#B9BCC4,#7C818C);}
+.plus{color:var(--ink-3); font-size:17px; font-weight:600;}
+.combo-txt h4{margin:0; font-size:15px; font-weight:700; line-height:1.25;}
+.combo-txt p{margin:3px 0 0; font-size:12.5px; color:var(--ink-2); line-height:1.35;}
+.combo-foot{display:flex; align-items:center; justify-content:space-between; margin-top:16px; gap:12px;}
+.combo-price{font-size:12.5px; color:var(--ink-2);}
+.combo-price b{font-size:19px; color:var(--ink); margin-left:6px;}
+.combo-price s{display:block; color:var(--ink-3); font-size:13px; margin-top:2px; margin-left:98px;}
+.btn-sm{
+  background:var(--orange); color:#fff; border-radius:24px;
+  padding:0 20px; height:46px; font-size:14.5px; font-weight:700; flex:none;
+  box-shadow:0 5px 14px rgba(241,90,34,.28);
+  transition:transform .18s var(--spring);
+}
+.btn-sm:active{transform:scale(.95);}
+
+/* Barra inferior detalle */
+.detail-bar{
+  border-top:1px solid var(--line); background:#fff;
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  box-shadow:0 -4px 20px rgba(27,27,31,.06);
+}
+.detail-bar small{display:block; font-size:10.5px; letter-spacing:1px; color:var(--ink-2); font-weight:600;}
+.detail-bar .bb-price{font-size:23px; font-weight:800; letter-spacing:-.6px;}
+.detail-bar .bb-sub{font-size:12px; color:var(--ink-2); font-weight:500; margin-left:5px;}
+.detail-bar .btn{width:auto; padding:0 26px; height:50px; font-size:16px;}
+
+/* ============================================================
+   PANTALLA 2 · CREA TU PAQUETE (sheet)
+   ============================================================ */
+#bundle{
+  z-index:40; background:#fff;
+  border-radius:20px 20px 0 0; top:48px;
+  transform:translateY(102%);
+  transition:transform .5s var(--ease);
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+}
+#bundle.open{transform:translateY(0);}
+.scrim{
+  position:absolute; inset:0; z-index:35; background:rgba(0,0,0,.28);
+  opacity:0; pointer-events:none; transition:opacity .45s var(--ease);
+}
+.scrim.on{opacity:1;}
+
+.sheet-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 18px 16px; border-bottom:1px solid var(--line);
+}
+.sheet-title{display:flex; align-items:center; gap:10px;}
+.sheet-title h2{margin:0; font-size:21px; font-weight:800; letter-spacing:-.4px;}
+.count-pill{
+  background:var(--orange-soft); color:var(--orange);
+  font-size:12.5px; font-weight:700; padding:5px 11px; border-radius:20px;
+  white-space:nowrap;
+}
+.count-pill.bump{animation:bump .45s var(--spring);}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.22)}100%{transform:scale(1)}}
+.close-btn{
+  width:34px; height:34px; border-radius:50%; background:#F1EEE9;
+  display:grid; place-items:center; color:var(--ink-2);
+  transition:transform .2s var(--spring);
+}
+.close-btn:active{transform:scale(.88);}
+
+.sheet-scroll{flex:1; overflow-y:auto; scrollbar-width:none; padding-bottom:8px;}
+.sheet-scroll::-webkit-scrollbar{display:none;}
+
+.block-title{
+  font-size:11.5px; font-weight:700; letter-spacing:1.1px; color:var(--ink-2);
+  padding:18px 18px 10px;
+}
+
+/* Item seleccionado */
+.selected-wrap{padding:0 18px;}
+.sel-card{
+  border:1px solid var(--line-2); border-radius:var(--radius); padding:14px;
+  display:flex; gap:12px; background:#fff;
+  transition:opacity .35s var(--ease), transform .35s var(--ease), margin .35s var(--ease), max-height .35s var(--ease);
+  overflow:hidden; max-height:180px;
+}
+.sel-card.removed{opacity:0; transform:scale(.94); max-height:0; padding:0 14px; border-color:transparent; margin-bottom:0;}
+.sel-thumb{width:76px; height:76px; border-radius:12px; flex:none; display:grid; place-items:center; font-size:34px;}
+.sel-info{flex:1; min-width:0;}
+.sel-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
+.sel-info h3{margin:0; font-size:17px; font-weight:700;}
+.sel-info p{margin:4px 0 10px; font-size:13px; color:var(--ink-2); line-height:1.4;}
+.sel-bottom{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.sel-price{font-size:17px; font-weight:800; color:var(--orange);}
+.trash{color:var(--ink-3); padding:2px; transition:transform .2s var(--spring), color .2s;}
+.trash:active{transform:scale(.85); color:#D33;}
+.stepper{
+  display:flex; align-items:center; gap:2px;
+  border:1px solid var(--line-2); border-radius:22px; padding:3px;
+}
+.stepper button{
+  width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+  font-size:19px; color:var(--ink); line-height:1;
+  transition:background .15s, transform .15s var(--spring);
+}
+.stepper button:active{background:#F1EEE9; transform:scale(.9);}
+.stepper button:disabled{color:#CFCBC4; cursor:default;}
+.stepper .val{min-width:26px; text-align:center; font-size:15px; font-weight:700;}
+
+.empty-note{
+  margin:0 18px; padding:16px; border:1px dashed var(--line-2); border-radius:14px;
+  font-size:13.5px; color:var(--ink-2); text-align:center; display:none;
+}
+.empty-note.show{display:block;}
+.empty-note button{color:var(--orange); font-weight:700; margin-left:4px;}
+
+.divider{height:1px; background:var(--line); margin:20px 18px 0;}
+
+/* Complementos */
+.comp-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px 18px 12px;}
+.comp-head h3{margin:0; font-size:11.5px; font-weight:700; letter-spacing:1.1px; color:var(--ink-2);}
+.comp-head p{margin:5px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.35; max-width:180px;}
+.filter{
+  flex:none; height:40px; min-width:118px;
+  border:1px solid var(--line-2); border-radius:10px; background:#fff;
+  display:flex; align-items:center; gap:6px; padding:0 12px; font-size:14px;
+}
+.filter select{appearance:none; border:none; background:none; font:inherit; outline:none; width:100%; cursor:pointer;}
+
+.comp-list{padding:0 18px;}
+.comp{
+  display:flex; align-items:center; gap:12px; padding:12px;
+  border-radius:14px; margin-bottom:4px;
+  transition:background .3s var(--ease), box-shadow .3s var(--ease), transform .25s var(--ease), opacity .25s;
+}
+.comp.on{background:var(--orange-soft);}
+.comp.hide{display:none;}
+.comp-txt{flex:1; min-width:0;}
+.comp-txt h4{
+  margin:0; font-size:15.5px; font-weight:700; letter-spacing:-.2px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.comp-txt p{
+  margin:3px 0 6px; font-size:12.5px; color:var(--ink-2);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.tag{
+  display:inline-block; font-size:11px; font-weight:600; padding:3px 9px;
+  border-radius:6px; background:#FCEADF; color:#B4501F;
+}
+.tag.exp{background:#E6E9EE; color:#4A5260;}
+.comp-price{text-align:right; flex:none;}
+.comp-price s{font-size:13px; color:var(--ink-3);}
+.comp-price b{display:block; font-size:14.5px; font-weight:700; margin-top:2px;}
+
+/* Switch */
+.switch{
+  position:relative; width:52px; height:31px; border-radius:20px; flex:none;
+  background:#E2DED7; transition:background .3s var(--ease);
+}
+.switch::after{
+  content:""; position:absolute; top:2.5px; left:2.5px;
+  width:26px; height:26px; border-radius:50%; background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+  transition:transform .32s var(--spring), width .2s var(--ease);
+}
+.switch.on{background:var(--orange);}
+.switch.on::after{transform:translateX(21px);}
+.switch:active::after{width:30px;}
+.switch.on:active::after{transform:translateX(17px);}
+
+/* Premios */
+.prize{
+  margin:18px 12px 6px; background:linear-gradient(180deg,#FFF6EE,#FFEFE2);
+  border-radius:18px; padding:16px 16px 14px; position:relative; overflow:hidden;
+  transition:box-shadow .35s var(--ease);
+}
+.prize.celebrate{animation:celebrate .7s var(--ease);}
+@keyframes celebrate{
+  0%{box-shadow:0 0 0 0 rgba(241,90,34,.42)}
+  60%{box-shadow:0 0 0 14px rgba(241,90,34,0)}
+  100%{box-shadow:0 0 0 0 rgba(241,90,34,0)}
+}
+.prize-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+.prize-copy{flex:1;}
+.prize-copy h4{margin:0; font-size:15.5px; font-weight:800; line-height:1.3; letter-spacing:-.2px; max-width:215px;}
+.prize-copy .won{
+  margin:7px 0 0; font-size:13px; font-weight:600; color:var(--orange);
+  display:flex; align-items:center; gap:6px; min-height:19px;
+}
+.prize-copy .none{color:var(--ink-2); font-weight:500;}
+.prize-art{
+  font-size:40px; line-height:1; flex:none; min-width:84px; text-align:right;
+  filter:grayscale(1) opacity(.35);
+  transition:filter .4s var(--ease), transform .4s var(--spring);
+}
+.prize-art.active{filter:none;}
+.prize-art.pop{animation:prizePop .6s var(--spring);}
+@keyframes prizePop{0%{transform:scale(.5) rotate(-12deg)}60%{transform:scale(1.18) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+
+.track{position:relative; margin:22px 6px 4px; height:34px;}
+.track-line{position:absolute; top:9px; left:0; right:0; height:6px; border-radius:6px; background:#EFD9C7;}
+.track-fill{
+  position:absolute; top:9px; left:0; height:6px; border-radius:6px;
+  background:linear-gradient(90deg,#F7A03C,var(--orange)); width:0;
+  transition:width .6s var(--ease);
+}
+.node{position:absolute; top:0; transform:translateX(-50%); text-align:center;}
+.node i{
+  display:block; width:24px; height:24px; border-radius:50%;
+  background:#fff; border:3px solid #EFD9C7; margin:0 auto;
+  transition:border-color .35s var(--ease), transform .35s var(--spring), background .35s;
+}
+.node.reached i{border-color:var(--orange); background:var(--orange); transform:scale(1.12);}
+.node.reached.just i{animation:nodePop .6s var(--spring);}
+@keyframes nodePop{0%{transform:scale(1)}45%{transform:scale(1.5)}100%{transform:scale(1.12)}}
+.node span{display:block; font-size:10.5px; color:var(--ink-2); margin-top:6px; font-weight:600; white-space:nowrap;}
+.node.reached span{color:var(--orange);}
+
+/* Resumen + CTA */
+.summary{
+  border-top:1px solid var(--line); background:#fff;
+  padding:14px 18px calc(14px + env(safe-area-inset-bottom));
+}
+.sum-row{display:flex; align-items:center; justify-content:space-between; font-size:13.5px; color:var(--ink-2);}
+.sum-right{display:flex; align-items:center; gap:8px;}
+.dto-pill{
+  background:var(--green-soft); color:var(--green);
+  font-size:12px; font-weight:700; padding:4px 9px; border-radius:16px;
+  transition:transform .3s var(--spring);
+}
+.dto-pill.bump{animation:bump .45s var(--spring);}
+.sum-save{color:var(--green); font-weight:700; font-size:13.5px;}
+.sum-total{display:flex; align-items:baseline; justify-content:space-between; margin-top:8px;}
+.sum-total span{font-size:16px; font-weight:700;}
+.sum-total b{font-size:24px; font-weight:800; letter-spacing:-.6px;}
+.cta{
+  margin-top:12px; width:100%; height:56px; border-radius:30px;
+  background:var(--orange); color:#fff; display:flex; align-items:center;
+  justify-content:space-between; padding:0 22px; font-size:16px; font-weight:700;
+  box-shadow:0 8px 20px rgba(241,90,34,.32);
+  transition:transform .18s var(--spring);
+}
+.cta:active{transform:scale(.975);}
+.cta .cta-right{display:flex; align-items:center; gap:10px;}
+
+/* Toast */
+.toast{
+  position:absolute; left:50%; bottom:196px; transform:translate(-50%, 20px);
+  background:rgba(27,27,31,.93); color:#fff; font-size:13.5px; font-weight:500;
+  padding:11px 16px; border-radius:24px; z-index:80; opacity:0; pointer-events:none;
+  transition:opacity .3s var(--ease), transform .3s var(--ease);
+  display:flex; align-items:center; gap:12px; white-space:nowrap;
+}
+.toast.show{opacity:1; transform:translate(-50%,0); pointer-events:auto;}
+.toast button{color:#FFB48C; font-weight:700;}
+
+/* +1 flotante */
+.floater{
+  position:absolute; z-index:85; font-size:13px; font-weight:800; color:var(--orange);
+  background:#fff; border-radius:20px; padding:5px 11px; box-shadow:var(--shadow-md);
+  pointer-events:none; animation:floatUp .95s var(--ease) forwards;
+}
+@keyframes floatUp{
+  0%{opacity:0; transform:translateY(6px) scale(.8)}
+  22%{opacity:1; transform:translateY(-6px) scale(1)}
+  100%{opacity:0; transform:translateY(-52px) scale(.95)}
+}
+.num{display:inline-block;}
+</style>
+</head>
+<body>
+
+<div class="device">
+  <div class="notch"></div>
+
+  <!-- Status bar -->
+  <div class="statusbar on-dark" id="statusbar">
+    <span>9:41</span>
+    <span class="status-right">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 11.2 6.2 8.8a3.3 3.3 0 0 1 4.6 0zM3.6 6.2 2 4.5a9.2 9.2 0 0 1 13 0l-1.6 1.7a7 7 0 0 0-9.8 0z"/><path d="M5.2 7.8 3.9 6.4a6.6 6.6 0 0 1 9.2 0l-1.3 1.4a4.7 4.7 0 0 0-6.6 0z"/></svg>
+      <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x=".6" y=".6" width="21" height="11.8" rx="3.4" stroke="currentColor" stroke-opacity=".45"/><rect x="2.2" y="2.2" width="17.8" height="8.6" rx="2.2" fill="currentColor"/><path d="M23.4 4.4v4.2a2.2 2.2 0 0 0 0-4.2z" fill="currentColor" fill-opacity=".45"/></svg>
+    </span>
+  </div>
+
+  <div class="screens">
+
+    <!-- ================= PANTALLA 1 ================= -->
+    <section class="screen" id="detail">
+      <div class="scroll" id="detailScroll">
+
+        <div class="hero">
+          <div class="hero-base"></div>
+          <div class="hero-bg"></div>
+          <div class="hero-sparkle s1">✦</div>
+          <div class="hero-sparkle s2">✦</div>
+          <div class="hero-sparkle s3">✦</div>
+          <div class="hero-figure">🤹</div>
+          <div class="hero-floor"></div>
+
+          <div class="hero-top">
+            <button class="round-btn" aria-label="Atrás">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1B1F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="logo-badge"><b>AMERICAN</b><span>CIRCUS</span></div>
+            <div class="hero-actions">
+              <button class="round-btn fav on" id="favBtn" aria-label="Favorito">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="#F15A22" stroke="#F15A22" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21.2l7.7-7.8 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+              <button class="round-btn" aria-label="Compartir">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1B1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-caption">
+            <h1>Circo American</h1>
+            <p>Jokey plaza - Av la marina 222</p>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+            <span>Sáb, 18 Mar</span>
+          </div>
+          <div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/></svg>
+            <span>4 horas</span>
+          </div>
+          <div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 6.2a3 3 0 0 1 0 5.6M18 20c0-2.4-.9-4.2-2.4-5.3"/></svg>
+            <span>Familiar</span>
+          </div>
+          <div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.7 5.6 6.1.8-4.5 4.2 1.2 6.1L12 17.2l-5.5 3 1.2-6.1L3.2 9.9l6.1-.8z"/></svg>
+            <span>4.9 (120 reviews)</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">LA EXPERIENCIA</div>
+          <p class="lead">Una función completa del Circo American para toda la familia: acróbatas, payasos y el gran show del fin de semana. Entrada General Preferente con acceso 30 minutos antes.</p>
+
+          <div class="map-card">
+            <div class="map-head">
+              <span class="mh-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+                Mapa de ruta
+              </span>
+              <span class="mh-right">Ver en mapa</span>
+            </div>
+            <svg class="map-svg" viewBox="0 0 380 210" preserveAspectRatio="xMidYMid slice">
+              <rect width="380" height="210" fill="#E8E4DC"/>
+              <g fill="#DAD5CB">
+                <rect x="14" y="18" width="70" height="46" rx="4"/><rect x="100" y="14" width="86" height="40" rx="4"/>
+                <rect x="206" y="20" width="60" height="50" rx="4"/><rect x="286" y="16" width="78" height="44" rx="4"/>
+                <rect x="20" y="86" width="64" height="54" rx="4"/><rect x="104" y="80" width="90" height="62" rx="4"/>
+                <rect x="212" y="88" width="66" height="48" rx="4"/><rect x="296" y="82" width="66" height="58" rx="4"/>
+                <rect x="24" y="160" width="80" height="40" rx="4"/><rect x="124" y="158" width="96" height="44" rx="4"/>
+                <rect x="240" y="156" width="118" height="46" rx="4"/>
+              </g>
+              <g stroke="#F5F2EC" stroke-width="9" stroke-linecap="round">
+                <path d="M0 74h380M0 150h380M92 0v210M198 0v210M282 0v210"/>
+              </g>
+              <g stroke="#CFC9BE" stroke-width="1"><path d="M0 74h380M0 150h380M92 0v210M198 0v210M282 0v210" stroke-opacity=".5"/></g>
+              <path d="M40 120 Q 70 118 92 112 L 150 96 L 198 88 L 300 84 L 336 96 L 340 150 L 240 156 L 150 150 L 92 146"
+                    fill="none" stroke="#6B2FB5" stroke-width="5.5" class="route"/>
+              <circle cx="40" cy="120" r="7" fill="#6B2FB5" stroke="#fff" stroke-width="2.5"/>
+              <g transform="translate(186 78)">
+                <path d="M0 14 C -7 6 -8 -2 -3 -6 a6 6 0 0 1 6 0 c5 4 4 12 -3 20z" fill="#E03B2E"/>
+                <circle cx="0" cy="-1" r="2.6" fill="#fff"/>
+              </g>
+              <text x="252" y="64" font-size="8" fill="#9A9488" font-family="sans-serif">Av. Javier Prado Este</text>
+              <text x="34" y="46" font-size="8" fill="#9A9488" font-family="sans-serif">NEPTUNO</text>
+            </svg>
+            <div class="map-stats">
+              <div class="map-stat"><small>Distancia</small><b>2.4 km</b></div>
+              <div class="map-stat"><small>Tiempo</small><b>8 min</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="price-block">
+          <div class="price-row"><span class="cur">S/</span><span class="amt" id="detailPrice">190</span></div>
+          <p class="price-note">Este es un precio para una familia de 4</p>
+          <p class="stock">En stock</p>
+          <div class="qty-select">
+            <select id="detailQty" aria-label="Cantidad">
+              <option value="1">Cantidad: 1</option>
+              <option value="2">Cantidad: 2</option>
+              <option value="3">Cantidad: 3</option>
+            </select>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B5B66" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="stack">
+          <button class="btn btn-outline" data-open="plain">Comprar</button>
+          <button class="btn btn-primary" data-open="plain">Crear Paquete</button>
+        </div>
+
+        <div class="combo">
+          <div class="combo-head">
+            <span class="combo-tag">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.5 13.3 13.3 20.5a2 2 0 0 1-2.9 0l-7-7A2 2 0 0 1 2.8 12V4.8A2 2 0 0 1 4.8 2.8H12a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.9z"/><circle cx="7.6" cy="7.6" r="1.3" fill="currentColor"/></svg>
+              COMBO RECOMENDADO
+            </span>
+            <span class="pill-green">Ahorra S/ 20</span>
+          </div>
+          <div class="combo-body">
+            <div class="thumb t-circus">🎪</div>
+            <span class="plus">+</span>
+            <div class="thumb t-food">🍔</div>
+            <div class="combo-txt">
+              <h4>Circo + Almuerzo familiar</h4>
+              <p>Incluye tabla premium de cortesía</p>
+            </div>
+          </div>
+          <div class="combo-foot">
+            <div class="combo-price">Precio del combo: <b>S/ 240</b><s>S/ 260</s></div>
+            <button class="btn-sm" data-open="combo">Crear Paquete</button>
+          </div>
+        </div>
+
+        <div style="height:26px"></div>
+      </div>
+
+      <div class="detail-bar">
+        <div>
+          <small>COSTO</small>
+          <div><span class="bb-price">S/ <span id="detailBarPrice">190</span></span><span class="bb-sub" id="detailBarSub">/ 1 experiencia</span></div>
+        </div>
+        <button class="btn btn-outline" data-open="plain">Comprar</button>
+      </div>
+    </section>
+
+    <div class="scrim" id="scrim"></div>
+
+    <!-- ================= PANTALLA 2 ================= -->
+    <section class="screen" id="bundle">
+      <div class="sheet-head">
+        <div class="sheet-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F15A22" stroke-width="1.9" stroke-linejoin="round"><path d="M4 8h16l-1.2 11.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8z"/><path d="M8.5 8V6.4a3.5 3.5 0 0 1 7 0V8"/></svg>
+          <h2>Crea tu paquete</h2>
+          <span class="count-pill" id="countPill">1 Ítem</span>
+        </div>
+        <button class="close-btn" id="closeSheet" aria-label="Cerrar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-scroll" id="sheetScroll">
+        <div class="block-title">SELECCIONADOS</div>
+        <div class="selected-wrap">
+          <div class="sel-card" id="selCard">
+            <div class="sel-thumb t-circus">🎪</div>
+            <div class="sel-info">
+              <div class="sel-top">
+                <h3>El Circo</h3>
+                <button class="trash" id="trashBtn" aria-label="Eliminar">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M10 4h4M9 7v11M15 7v11M6 7l1 13h10l1-13"/></svg>
+                </button>
+              </div>
+              <p>Entrada General Preferente. Acceso al gran show del fin de semana.</p>
+              <div class="sel-bottom">
+                <span class="sel-price">S/ <span id="circoPrice">190.00</span></span>
+                <div class="stepper">
+                  <button id="minusBtn" aria-label="Quitar">−</button>
+                  <span class="val" id="circoQty">1</span>
+                  <button id="plusBtn" aria-label="Agregar">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="empty-note" id="emptyNote">
+          No hay experiencias en tu paquete.<button id="restoreBtn">Volver a agregar El Circo</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="comp-head">
+          <div>
+            <h3>COMPLETA TU EXPERIENCIA</h3>
+            <p>10% de descuento si lo compras como complemento</p>
+          </div>
+          <div class="filter">
+            <select id="filterSel" aria-label="Filtrar">
+              <option value="all">Todo</option>
+              <option value="Comida">Comida</option>
+              <option value="Experiencia">Experiencia</option>
+            </select>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5B5B66" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="comp-list" id="compList"></div>
+
+        <!-- Premios -->
+        <div class="prize" id="prizeCard">
+          <div class="prize-top">
+            <div class="prize-copy">
+              <h4>Gana premios por la cantidad de ítems añadidos</h4>
+              <div class="won none" id="prizeText">No tienes premios, agrega más ítems para conseguir premios</div>
+            </div>
+            <div class="prize-art" id="prizeArt">🎁</div>
+          </div>
+          <div class="track">
+            <div class="track-line"></div>
+            <div class="track-fill" id="trackFill"></div>
+            <div class="node" id="node2" style="left:8%"><i></i><span>2 Ítems</span></div>
+            <div class="node" id="node3" style="left:50%"><i></i><span>3 Ítems</span></div>
+            <div class="node" id="node5" style="left:92%"><i></i><span>5 Ítems</span></div>
+          </div>
+        </div>
+
+        <div style="height:6px"></div>
+      </div>
+
+      <div class="summary">
+        <div class="sum-row">
+          <span>Ahorro aplicado</span>
+          <span class="sum-right">
+            <span class="dto-pill" id="dtoPill">S/ <span id="dtoVal">0.00</span> Dto.</span>
+            <span class="sum-save">- S/ <span id="saveVal">0.00</span></span>
+          </span>
+        </div>
+        <div class="sum-total">
+          <span>Total a pagar</span>
+          <b>S/ <span id="totalVal">190.00</span></b>
+        </div>
+        <button class="cta" id="ctaBtn">
+          <span>Comprar todo (<span id="ctaCount">1 ítem</span>)</span>
+          <span class="cta-right">
+            S/ <span id="ctaTotal">190.00</span>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAction" hidden>Deshacer</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------------- Datos ---------------- */
+  var BASE = { name:'El Circo', price:190.00, qty:1, active:true };
+
+  var COMPLEMENTS = [
+    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    on:false },
+    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   on:false },
+    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', on:false },
+    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  on:false }
+  ];
+
+  var DISCOUNT = 0.10; // 10% como complemento
+
+  var PRIZES = [
+    { items:2, art:'🍟',    label:'¡Ganaste papas fritas!' },
+    { items:3, art:'🍟🥤',  label:'¡Ganaste papas fritas + gaseosa!' },
+    { items:5, art:'🍗',    label:'¡Ganaste una pieza de pollo!' }
+  ];
+
+  var NODE_POS = { 2:8, 3:50, 5:92 };
+
+  /* ---------------- Utilidades ---------------- */
+  var $ = function(id){ return document.getElementById(id); };
+  function money(n){ return n.toFixed(2); }
+
+  // Animación de números (count-up)
+  var tweens = {};
+  function animateNumber(el, to, decimals){
+    if(!el) return;
+    var key = el.id || (el.dataset.k = el.dataset.k || Math.random());
+    var from = tweens[key] !== undefined ? tweens[key] : parseFloat(String(el.textContent).replace(/[^\d.-]/g,'')) || 0;
+    if(Math.abs(from - to) < 0.005){ el.textContent = decimals ? money(to) : Math.round(to); tweens[key] = to; return; }
+    tweens[key] = to;
+    var start = performance.now(), dur = 520;
+    function frame(now){
+      var t = Math.min(1, (now - start)/dur);
+      var e = 1 - Math.pow(1 - t, 3);            // easeOutCubic
+      var v = from + (to - from) * e;
+      el.textContent = decimals ? money(v) : Math.round(v);
+      if(t < 1 && tweens[key] === to) requestAnimationFrame(frame);
+      else if(tweens[key] === to) el.textContent = decimals ? money(to) : Math.round(to);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function bump(el){
+    if(!el) return;
+    el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+  }
+
+  function floater(anchor, text){
+    var r = anchor.getBoundingClientRect();
+    var d = document.querySelector('.device').getBoundingClientRect();
+    var f = document.createElement('div');
+    f.className = 'floater'; f.textContent = text;
+    f.style.left = (r.left - d.left + r.width/2 - 24) + 'px';
+    f.style.top  = (r.top  - d.top  - 6) + 'px';
+    document.querySelector('.device').appendChild(f);
+    setTimeout(function(){ f.remove(); }, 1000);
+  }
+
+  var toastTimer;
+  function toast(msg, actionLabel, onAction){
+    var t = $('toast'), a = $('toastAction');
+    $('toastMsg').textContent = msg;
+    if(actionLabel){ a.hidden = false; a.textContent = actionLabel; a.onclick = function(){ hideToast(); onAction && onAction(); }; }
+    else a.hidden = true;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 3200);
+  }
+  function hideToast(){ $('toast').classList.remove('show'); }
+
+  /* ---------------- Render de complementos ---------------- */
+  function renderComplements(){
+    var list = $('compList');
+    list.innerHTML = '';
+    COMPLEMENTS.forEach(function(c){
+      var row = document.createElement('div');
+      row.className = 'comp' + (c.on ? ' on' : '');
+      row.dataset.id = c.id; row.dataset.tag = c.tag;
+      row.innerHTML =
+        '<div class="thumb ' + c.cls + '">' + c.emoji + '</div>' +
+        '<div class="comp-txt">' +
+          '<h4>' + c.name + '</h4>' +
+          '<p>' + c.desc + '</p>' +
+          '<span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
+        '</div>' +
+        '<div class="comp-price"><s>S/ ' + money(c.price) + '</s><b>S/ ' + money(c.price * (1 - DISCOUNT)) + '</b></div>' +
+        '<div class="switch' + (c.on ? ' on' : '') + '" role="switch" aria-checked="' + c.on + '" tabindex="0"></div>';
+      row.querySelector('.switch').addEventListener('click', function(){ toggle(c.id, this); });
+      list.appendChild(row);
+    });
+    applyFilter();
+  }
+
+  function applyFilter(){
+    var v = $('filterSel').value;
+    Array.prototype.forEach.call(document.querySelectorAll('.comp'), function(row){
+      row.classList.toggle('hide', v !== 'all' && row.dataset.tag !== v);
+    });
+  }
+
+  function toggle(id, sw){
+    var c = COMPLEMENTS.find(function(x){ return x.id === id; });
+    c.on = !c.on;
+    sw.classList.toggle('on', c.on);
+    sw.setAttribute('aria-checked', String(c.on));
+    sw.closest('.comp').classList.toggle('on', c.on);
+    floater(sw, c.on ? '+1 ítem' : '−1 ítem');
+    update();
+  }
+
+  /* ---------------- Estado / cálculo ---------------- */
+  var lastTier = -1, lastCount = 1;
+
+  function itemCount(){
+    var n = BASE.active ? BASE.qty : 0;
+    COMPLEMENTS.forEach(function(c){ if(c.on) n++; });
+    return n;
+  }
+  function totals(){
+    var total = BASE.active ? BASE.price * BASE.qty : 0;
+    var save = 0;
+    COMPLEMENTS.forEach(function(c){
+      if(!c.on) return;
+      var d = c.price * (1 - DISCOUNT);
+      total += d;
+      save += c.price - d;
+    });
+    return { total: total, save: save };
+  }
+  function tierIndex(count){
+    var idx = -1;
+    PRIZES.forEach(function(p, i){ if(count >= p.items) idx = i; });
+    return idx;
+  }
+  function fillPercent(count){
+    if(count <= 1) return 0;
+    if(count <= 2) return NODE_POS[2] * (count - 1);
+    if(count <= 3) return NODE_POS[2] + (NODE_POS[3] - NODE_POS[2]) * (count - 2);
+    if(count <= 5) return NODE_POS[3] + (NODE_POS[5] - NODE_POS[3]) * ((count - 3) / 2);
+    return 100;
+  }
+
+  function update(){
+    var count = itemCount();
+    var t = totals();
+
+    // contador de ítems
+    var label = count + (count === 1 ? ' Ítem' : ' Ítems');
+    if(count !== lastCount){ $('countPill').textContent = label; bump($('countPill')); }
+    else $('countPill').textContent = label;
+    $('ctaCount').textContent = count + (count === 1 ? ' ítem' : ' ítems');
+
+    // precios animados
+    animateNumber($('totalVal'), t.total, true);
+    animateNumber($('ctaTotal'), t.total, true);
+    animateNumber($('saveVal'), t.save, true);
+    animateNumber($('dtoVal'), t.save, true);
+    animateNumber($('circoPrice'), BASE.price * BASE.qty, true);
+    if(t.save !== parseFloat($('dtoVal').dataset.prev || '0')){
+      bump($('dtoPill'));
+      $('dtoVal').dataset.prev = t.save;
+    }
+
+    // stepper / tarjeta base
+    $('circoQty').textContent = BASE.qty;
+    $('minusBtn').disabled = BASE.qty <= 1;
+
+    // barra de premios
+    $('trackFill').style.width = fillPercent(count) + '%';
+    [2,3,5].forEach(function(n){
+      var node = $('node' + n);
+      var reached = count >= n;
+      var wasReached = node.classList.contains('reached');
+      node.classList.toggle('reached', reached);
+      if(reached && !wasReached){
+        node.classList.add('just');
+        setTimeout(function(){ node.classList.remove('just'); }, 700);
+      }
+    });
+
+    // premio actual
+    var tier = tierIndex(count);
+    var art = $('prizeArt'), txt = $('prizeText');
+    if(tier >= 0){
+      art.textContent = PRIZES[tier].art;
+      art.classList.add('active');
+      txt.textContent = PRIZES[tier].label;
+      txt.classList.remove('none');
+    } else {
+      art.textContent = '🎁';
+      art.classList.remove('active');
+      txt.textContent = 'No tienes premios, agrega más ítems para conseguir premios';
+      txt.classList.add('none');
+    }
+    if(tier !== lastTier){
+      if(tier > lastTier && tier >= 0){
+        art.classList.remove('pop'); void art.offsetWidth; art.classList.add('pop');
+        var card = $('prizeCard');
+        card.classList.remove('celebrate'); void card.offsetWidth; card.classList.add('celebrate');
+        toast('🎉 ' + PRIZES[tier].label);
+      }
+      lastTier = tier;
+    }
+
+    // estado vacío
+    $('emptyNote').classList.toggle('show', !BASE.active);
+    $('selCard').classList.toggle('removed', !BASE.active);
+
+    lastCount = count;
+  }
+
+  /* ---------------- Pantalla de detalle ---------------- */
+  function syncDetail(){
+    var q = BASE.qty;
+    $('detailPrice').textContent = 190;
+    animateNumber($('detailBarPrice'), BASE.price * q, false);
+    $('detailBarSub').textContent = '/ ' + q + (q === 1 ? ' experiencia' : ' experiencias');
+  }
+
+  $('detailQty').addEventListener('change', function(){
+    BASE.qty = parseInt(this.value, 10);
+    BASE.active = true;
+    syncDetail(); update();
+  });
+
+  $('favBtn').addEventListener('click', function(){ this.classList.toggle('on'); });
+
+  /* ---------------- Navegación sheet ---------------- */
+  function openSheet(mode){
+    if(mode === 'combo'){
+      var b = COMPLEMENTS.find(function(c){ return c.id === 'bembos'; });
+      if(!b.on){ b.on = true; renderComplements(); }
+    }
+    $('bundle').classList.add('open');
+    $('scrim').classList.add('on');
+    $('detail').classList.add('pushed');
+    $('statusbar').classList.remove('on-dark');
+    update();
+  }
+  function closeSheet(){
+    $('bundle').classList.remove('open');
+    $('scrim').classList.remove('on');
+    $('detail').classList.remove('pushed');
+    if($('detailScroll').scrollTop < 260) $('statusbar').classList.add('on-dark');
+    hideToast();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-open]'), function(btn){
+    btn.addEventListener('click', function(){ openSheet(btn.dataset.open); });
+  });
+  $('closeSheet').addEventListener('click', closeSheet);
+  $('scrim').addEventListener('click', closeSheet);
+
+  // status bar clara/oscura según scroll del hero
+  $('detailScroll').addEventListener('scroll', function(){
+    if($('bundle').classList.contains('open')) return;
+    $('statusbar').classList.toggle('on-dark', this.scrollTop < 260);
+  });
+
+  /* ---------------- Stepper / eliminar ---------------- */
+  $('plusBtn').addEventListener('click', function(){
+    if(BASE.qty >= 5) return;
+    BASE.qty++; BASE.active = true;
+    floater(this, '+1 ítem');
+    $('detailQty').value = Math.min(BASE.qty, 3);
+    syncDetail(); update();
+  });
+  $('minusBtn').addEventListener('click', function(){
+    if(BASE.qty <= 1) return;
+    BASE.qty--;
+    floater(this, '−1 ítem');
+    $('detailQty').value = Math.min(BASE.qty, 3);
+    syncDetail(); update();
+  });
+  $('trashBtn').addEventListener('click', function(){
+    var prev = BASE.qty;
+    BASE.active = false;
+    update();
+    toast('Se eliminó El Circo', 'Deshacer', function(){
+      BASE.active = true; BASE.qty = prev; update();
+    });
+  });
+  $('restoreBtn').addEventListener('click', function(){
+    BASE.active = true; update();
+  });
+
+  $('filterSel').addEventListener('change', applyFilter);
+
+  $('ctaBtn').addEventListener('click', function(){
+    var t = totals(), c = itemCount();
+    toast('Compra simulada · ' + c + (c === 1 ? ' ítem' : ' ítems') + ' · S/ ' + money(t.total));
+  });
+
+  /* ---------------- Init ---------------- */
+  renderComplements();
+  syncDetail();
+  update();
+})();
+</script>
+</body>
+</html>
