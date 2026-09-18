@@ -212,9 +212,6 @@ img{display:block; max-width:100%;}
 .t-museum{background:linear-gradient(145deg,#B9BCC4,#7C818C);}
 .t-play{background:linear-gradient(145deg,#B46BE8,#6A2FB0);}
 .t-theater{background:linear-gradient(145deg,#2BA3B5,#136171);}
-.t-water{background:linear-gradient(145deg,#4FC3F7,#1E6FD9);}
-.t-zoo{background:linear-gradient(145deg,#A5D66B,#3F8F3A);}
-.t-farm{background:linear-gradient(145deg,#F4D58D,#C98B3A);}
 .plus{color:var(--ink-3); font-size:17px; font-weight:600;}
 .combo-txt h4{margin:0; font-size:15px; font-weight:700; line-height:1.25;}
 .combo-txt p{margin:3px 0 0; font-size:12.5px; color:var(--ink-2); line-height:1.35;}
@@ -610,6 +607,8 @@ img{display:block; max-width:100%;}
 
 /* Confeti */
 .confetti{position:absolute; top:-14px; z-index:95; pointer-events:none; border-radius:2px;}
+.star-fx{position:absolute; z-index:96; pointer-events:none; color:#FFC928; line-height:1; font-style:normal; text-shadow:0 0 8px rgba(255,201,40,.8), 0 0 2px #fff;}
+.gold-glow{position:absolute; inset:0; z-index:94; pointer-events:none; background:radial-gradient(60% 40% at 50% 62%, rgba(255,214,90,.45), rgba(255,214,90,0) 70%);}
 
 /* ============================================================
    PANTALLA 3 · PAGO (carga)
@@ -713,7 +712,7 @@ img{display:block; max-width:100%;}
 .pass-fields b{display:block; font-size:14px; font-weight:700; margin-top:3px; line-height:1.25;}
 .pass-qr{position:absolute; left:0; right:0; bottom:18px; text-align:center;}
 .pass-qr .qr{width:112px; height:112px; margin:0 auto; background:#fff; border-radius:10px; padding:8px;}
-/* App tufinde: cabecera, vistas y menú inferior */
+/* App tufinde: cabecera + boletos */
 .app-head{
   display:flex; align-items:center; justify-content:space-between;
   padding:54px 20px 8px; background:var(--app-bg);
@@ -730,50 +729,7 @@ img{display:block; max-width:100%;}
   transition:opacity .28s var(--ease), transform .28s var(--ease), visibility 0s .28s;
 }
 .app-view.on{opacity:1; visibility:visible; transform:none; transition:opacity .28s var(--ease), transform .28s var(--ease);}
-.tabbar{
-  display:grid; grid-template-columns:1fr 1fr;
-  background:rgba(255,255,255,.92); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-  border-top:1px solid var(--line); padding:8px 0 calc(22px + env(safe-area-inset-bottom));
-}
-.tab{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:600; color:var(--ink-3); transition:color .2s;}
-.tab svg{transition:transform .25s var(--spring);}
-.tab.on{color:var(--brand);}
-.tab.on svg{transform:scale(1.08);}
-.tab:active svg{transform:scale(.88);}
-
-/* Explorar */
-.explore-head{padding:14px 20px 4px;}
-.explore-head h2{margin:0; font-size:32px; font-weight:800; letter-spacing:-.8px; color:var(--navy);}
-.explore-head p{margin:3px 0 0; font-size:13.5px; color:var(--ink-2);}
-.chips{display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; padding:12px 20px 10px;}
-.chips::-webkit-scrollbar{display:none;}
-.chip{
-  flex:none; height:32px; padding:0 14px; border-radius:16px; font-size:13px; font-weight:600;
-  background:#fff; color:var(--ink-2); border:1px solid var(--line-2);
-  transition:background .2s, color .2s, border-color .2s, transform .15s var(--spring);
-}
-.chip:active{transform:scale(.94);}
-.chip.on{background:var(--navy); color:#fff; border-color:var(--navy);}
-.exp-list{flex:1; overflow-y:auto; scrollbar-width:none; padding:4px 20px 20px;}
-.exp-list::-webkit-scrollbar{display:none;}
-.exp-card{
-  display:flex; gap:12px; align-items:center; width:100%; text-align:left;
-  background:#fff; border-radius:16px; padding:10px; margin-bottom:10px; box-shadow:var(--shadow-sm);
-  animation:expIn .4s var(--ease) both;
-  transition:transform .18s var(--spring);
-}
-.exp-card:active{transform:scale(.98);}
 @keyframes expIn{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
-.exp-thumb{width:78px; height:78px; border-radius:12px; flex:none; display:grid; place-items:center; font-size:34px; overflow:hidden;}
-.exp-thumb img{width:100%; height:100%; object-fit:cover;}
-.exp-info{flex:1; min-width:0;}
-.exp-info .tag{margin-bottom:5px;}
-.exp-info h4{margin:0; font-size:15.5px; font-weight:700; color:var(--navy); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.exp-info p{margin:3px 0 0; font-size:12.5px; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.exp-foot{display:flex; align-items:center; justify-content:space-between; margin-top:6px; font-size:12.5px; color:var(--ink-2);}
-.exp-foot b{font-size:14.5px; color:var(--ink);}
-.exp-empty{text-align:center; color:var(--ink-3); font-size:13.5px; padding:30px 0;}
-
 .pass-qr span{display:block; margin-top:7px; font-size:11px; letter-spacing:1.4px; opacity:.8;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -1109,27 +1065,8 @@ img{display:block; max-width:100%;}
           </div>
         </div>
 
-        <!-- Vista: Explorar -->
-        <div class="app-view" id="viewExplore">
-          <div class="explore-head">
-            <h2>Explorar</h2>
-            <p>Experiencias familiares este fin de semana</p>
-          </div>
-          <div class="chips" id="chips"></div>
-          <div class="exp-list" id="expList"></div>
-        </div>
       </div>
 
-      <nav class="tabbar">
-        <button class="tab on" data-tab="viewTickets">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14.5 6.5v11" stroke-dasharray="2 2.2"/></svg>
-          Boletos
-        </button>
-        <button class="tab" data-tab="viewExplore">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"/></svg>
-          Explorar
-        </button>
-      </nav>
     </section>
 
     <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAction" hidden>Deshacer</button></div>
@@ -1220,6 +1157,16 @@ img{display:block; max-width:100%;}
     if(actx.state === 'suspended') actx.resume();
     return actx;
   }
+  var bus = null;
+  function out(){   // salida con compresor para que los sonidos grandes no saturen
+    var a = audio(); if(!a) return null;
+    if(!bus){
+      bus = a.createDynamicsCompressor();
+      bus.threshold.value = -14; bus.ratio.value = 6;
+      bus.connect(a.destination);
+    }
+    return bus;
+  }
   function tone(freq, at, dur, type, vol){
     var a = audio(); if(!a) return;
     var o = a.createOscillator(), g = a.createGain(), t = a.currentTime + at;
@@ -1227,8 +1174,48 @@ img{display:block; max-width:100%;}
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(vol || 0.18, t + 0.012);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(a.destination);
+    o.connect(g); g.connect(out());
     o.start(t); o.stop(t + dur + 0.02);
+  }
+  // trompeta: dos sierras desafinadas + filtro que "abre" + vibrato
+  function brass(freq, at, dur, vol){
+    var a = audio(); if(!a) return;
+    var t = a.currentTime + at, g = a.createGain(), f = a.createBiquadFilter();
+    f.type = 'lowpass'; f.Q.value = 2;
+    f.frequency.setValueAtTime(500, t);
+    f.frequency.linearRampToValueAtTime(3200, t + 0.06);
+    f.frequency.exponentialRampToValueAtTime(1600, t + Math.max(0.2, dur));
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.035);
+    g.gain.setValueAtTime(vol || 0.12, t + dur * 0.8);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.12);
+    var lfo = a.createOscillator(), lfoG = a.createGain();
+    lfo.frequency.value = 5.5; lfoG.gain.setValueAtTime(0, t); lfoG.gain.linearRampToValueAtTime(freq * 0.006, t + 0.25);
+    lfo.connect(lfoG);
+    [1, 1.004].forEach(function(k){
+      var o = a.createOscillator(); o.type = 'sawtooth'; o.frequency.value = freq * k;
+      lfoG.connect(o.frequency); o.connect(f); o.start(t); o.stop(t + dur + 0.15);
+    });
+    f.connect(g); g.connect(out());
+    lfo.start(t); lfo.stop(t + dur + 0.15);
+  }
+  // platillo: ruido filtrado que se apaga lento
+  function cymbal(at, dur, vol){
+    var a = audio(); if(!a) return;
+    var t = a.currentTime + at, len = Math.floor(a.sampleRate * dur);
+    var buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
+    for(var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    var src = a.createBufferSource(), hp = a.createBiquadFilter(), g = a.createGain();
+    src.buffer = buf; hp.type = 'highpass'; hp.frequency.value = 5000;
+    g.gain.setValueAtTime(vol || 0.12, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(hp); hp.connect(g); g.connect(out()); src.start(t);
+  }
+  function timpani(freq, at){
+    var a = audio(); if(!a) return;
+    var t = a.currentTime + at, o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(freq * 1.5, t); o.frequency.exponentialRampToValueAtTime(freq, t + 0.08);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.35, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+    o.connect(g); g.connect(out()); o.start(t); o.stop(t + 0.75);
   }
   // "cling" de ahorro: sube de tono con cada ítem
   function playSave(count){
@@ -1236,20 +1223,72 @@ img{display:block; max-width:100%;}
     tone(988 * k, 0, 0.09, 'square', 0.07);
     tone(1319 * k, 0.07, 0.32, 'sine', 0.16);
   }
-  function playPrize(){
-    [523.25, 659.25, 783.99, 1046.5].forEach(function(f, i){ tone(f, i * 0.09, 0.35, 'triangle', 0.16); });
-    tone(1568, 0.38, 0.5, 'sine', 0.1);
+  // sonido de premio según el escalón: 3 ítems → campanita, 5 → fanfarria, 7 → trompetas
+  function playPrize(tier){
+    if(tier <= 0){
+      [523.25, 659.25, 783.99, 1046.5].forEach(function(f, i){ tone(f, i * 0.09, 0.35, 'triangle', 0.16); });
+      tone(1568, 0.38, 0.5, 'sine', 0.1);
+    } else if(tier === 1){
+      [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568].forEach(function(f, i){ tone(f, i * 0.07, 0.4, 'triangle', 0.15); });
+      [523.25, 659.25, 783.99, 1046.5].forEach(function(f){ tone(f, 0.46, 1.1, 'triangle', 0.09); });
+      [2093, 2637, 3136, 2637, 3520].forEach(function(f, i){ tone(f, 0.5 + i * 0.08, 0.3, 'sine', 0.05); });
+      cymbal(0.46, 0.9, 0.06);
+    } else {
+      // "ta-ta-ta-taaa… ¡taráááán!" con dos trompetas en terceras
+      var mel = [[392, 0, .13], [392, .16, .13], [392, .32, .13], [523.25, .48, .5], [466.16, 1.02, .16], [523.25, 1.2, .16]];
+      mel.forEach(function(n){ brass(n[0], n[1], n[2], 0.11); brass(n[0] * 0.8, n[1], n[2], 0.06); });
+      [523.25, 659.25, 783.99, 1046.5].forEach(function(f){ brass(f, 1.4, 1.3, 0.07); });
+      timpani(98, 0.48); timpani(98, 1.4); timpani(130.8, 1.55);
+      cymbal(1.4, 1.8, 0.13);
+      [2093, 2637, 3136, 4186, 3136, 4186, 5274].forEach(function(f, i){ tone(f, 1.5 + i * 0.09, 0.35, 'sine', 0.045); });
+    }
   }
   function playSuccess(){
     tone(880, 0, 0.18, 'sine', 0.16); tone(1318.5, 0.12, 0.45, 'sine', 0.16);
   }
   function playPass(i){ tone(620 + i * 90, 0, 0.12, 'sine', 0.08); }
 
-  function confetti(){
+  // efectos de premio según el escalón: 3 → confeti, 5 → mucho más confeti, 7 → confeti + estrellas
+  function celebrate(tier){
+    if(tier <= 0){ confetti(90, 0); return; }
+    if(tier === 1){ confetti(150, 0); confetti(130, 450); return; }
+    confetti(120, 0, true); confetti(100, 500, true);
+    stars();
+  }
+
+  function stars(){
     var dev = document.querySelector('.device');
     var w = dev.clientWidth, h = dev.clientHeight;
-    var colors = ['#F15A22','#F7A03C','#FFD23F','#12945A','#2F6BD8','#E03B7A','#6B2FB5'];
-    for(var i = 0; i < 90; i++){
+    var cx = w / 2, cy = h * 0.62;
+    // estallido radial desde la barra de premios
+    for(var i = 0; i < 26; i++){
+      var el = document.createElement('i');
+      el.className = 'star-fx';
+      el.textContent = i % 3 ? '★' : '✦';
+      el.style.left = cx + 'px'; el.style.top = cy + 'px';
+      el.style.fontSize = (14 + Math.random() * 20) + 'px';
+      dev.appendChild(el);
+      var ang = (i / 26) * Math.PI * 2 + Math.random() * .3, dist = 110 + Math.random() * 150;
+      var anim = el.animate([
+        { transform:'translate(-50%,-50%) scale(.2) rotate(0deg)', opacity:0 },
+        { transform:'translate(calc(-50% + ' + (Math.cos(ang) * dist * .7) + 'px), calc(-50% + ' + (Math.sin(ang) * dist * .7) + 'px)) scale(1.2) rotate(90deg)', opacity:1, offset:.35 },
+        { transform:'translate(calc(-50% + ' + (Math.cos(ang) * dist) + 'px), calc(-50% + ' + (Math.sin(ang) * dist + 60) + 'px)) scale(.6) rotate(200deg)', opacity:0 }
+      ], { duration:1400 + Math.random() * 500, delay:1350 + Math.random() * 150, easing:'cubic-bezier(.2,.7,.3,1)', fill:'both' });
+      anim.onfinish = (function(e){ return function(){ e.remove(); }; })(el);
+    }
+    // destello dorado
+    var glow = document.createElement('div');
+    glow.className = 'gold-glow';
+    dev.appendChild(glow);
+    glow.animate([{ opacity:0 }, { opacity:1, offset:.25 }, { opacity:0 }], { duration:1500, delay:1350, fill:'both' }).onfinish = function(){ glow.remove(); };
+  }
+
+  function confetti(count, delay, gold){
+    var dev = document.querySelector('.device');
+    var w = dev.clientWidth, h = dev.clientHeight;
+    var colors = gold ? ['#FFD23F','#F7C948','#E0B43A','#FFF1A8','#F15A22','#F7A03C']
+                      : ['#F15A22','#F7A03C','#FFD23F','#12945A','#2F6BD8','#E03B7A','#6B2FB5'];
+    for(var i = 0; i < count; i++){
       var el = document.createElement('i');
       el.className = 'confetti';
       var size = 6 + Math.random() * 6;
@@ -1266,7 +1305,7 @@ img{display:block; max-width:100%;}
         { transform:'translate(0,0) rotate(0deg)', opacity:1 },
         { transform:'translate(' + drift + 'px,' + (h * .75) + 'px) rotate(' + rot + 'deg)', opacity:1, offset:.8 },
         { transform:'translate(' + (drift * 1.2) + 'px,' + (h + 30) + 'px) rotate(' + (rot * 1.2) + 'deg)', opacity:0 }
-      ], { duration:dur, delay:Math.random() * 250, easing:'cubic-bezier(.25,.6,.4,1)', fill:'both' });
+      ], { duration:dur, delay:(delay || 0) + Math.random() * 250, easing:'cubic-bezier(.25,.6,.4,1)', fill:'both' });
       anim.onfinish = (function(e){ return function(){ e.remove(); }; })(el);
     }
   }
@@ -1434,8 +1473,8 @@ img{display:block; max-width:100%;}
         var card = $('prizeCard');
         card.classList.remove('celebrate'); void card.offsetWidth; card.classList.add('celebrate');
         $('prizeCard').classList.remove('min');
-        confetti();
-        playPrize();
+        celebrate(tier);
+        playPrize(tier);
       }
       lastTier = tier;
     }
@@ -1813,7 +1852,6 @@ img{display:block; max-width:100%;}
     selected = data.length - 1;   // el último en llegar queda al frente
     layoutPasses();
     $('walletSub').textContent = data.length + (data.length === 1 ? ' boleto' : ' boletos') + ' · S/ ' + money(total) + ' pagado';
-    setTab('viewTickets');
     $('tickets').classList.add('show');
     $('statusbar').classList.remove('on-dark');
     $('tickets').querySelector('.wallet-scroll').scrollTop = 0;
@@ -1830,58 +1868,6 @@ img{display:block; max-width:100%;}
     setTimeout(function(){ $('paying').classList.remove('show', 'run', 'done'); }, 700);
   }
 
-  /* ---------------- App tufinde: menú inferior + Explorar ---------------- */
-  var EXPERIENCES = [
-    { id:'circo',   name:'Circo American',            place:'Jockey Plaza · Surco',            cat:'Shows',      price:190, rating:4.9, img:'assets/american-circus.webp' },
-    { id:'agua',    name:'Circuito Mágico del Agua',  place:'Parque de la Reserva · Lima',     cat:'Aire libre', price:4,   rating:4.7, emoji:'⛲', cls:'t-water' },
-    { id:'leyendas',name:'Parque de las Leyendas',    place:'San Miguel',                      cat:'Aire libre', price:25,  rating:4.6, emoji:'🦒', cls:'t-zoo' },
-    { id:'titeres', name:'Show de títeres',           place:'Miraflores',                      cat:'Shows',      price:35,  rating:4.8, emoji:'🎭', cls:'t-circus' },
-    { id:'ciencia', name:'Museo interactivo de ciencias', place:'Barranco',                    cat:'Museos',     price:30,  rating:4.7, emoji:'🔬', cls:'t-museum' },
-    { id:'cocina',  name:'Taller de cocina para niños', place:'Surco',                         cat:'Talleres',   price:60,  rating:4.9, emoji:'👩‍🍳', cls:'t-food' },
-    { id:'granja',  name:'Granja de animales',        place:'Pachacámac',                      cat:'Aire libre', price:40,  rating:4.8, emoji:'🐐', cls:'t-farm' }
-  ];
-  var CATS = ['Todo', 'Shows', 'Aire libre', 'Museos', 'Talleres'];
-  var currentCat = 'Todo';
-
-  function renderChips(){
-    $('chips').innerHTML = CATS.map(function(c){
-      return '<button class="chip' + (c === currentCat ? ' on' : '') + '" data-cat="' + c + '">' + c + '</button>';
-    }).join('');
-  }
-  function renderExplore(){
-    var items = EXPERIENCES.filter(function(e){ return currentCat === 'Todo' || e.cat === currentCat; });
-    $('expList').innerHTML = items.length ? items.map(function(e, i){
-      var thumb = e.img ? '<img src="' + e.img + '" alt="">' : e.emoji;
-      return '<button class="exp-card" data-id="' + e.id + '" style="animation-delay:' + (i * 50) + 'ms">' +
-        '<div class="exp-thumb ' + (e.cls || '') + '">' + thumb + '</div>' +
-        '<div class="exp-info">' +
-          '<span class="tag' + (e.cat === 'Museos' ? ' exp' : '') + '">' + e.cat + '</span>' +
-          '<h4>' + e.name + '</h4>' +
-          '<p>' + e.place + ' · Sáb 18 Mar</p>' +
-          '<div class="exp-foot"><span>★ ' + e.rating.toFixed(1) + '</span><span>desde <b>S/ ' + e.price + '</b></span></div>' +
-        '</div></button>';
-    }).join('') : '<div class="exp-empty">No hay experiencias en esta categoría</div>';
-  }
-  $('chips').addEventListener('click', function(ev){
-    var b = ev.target.closest('.chip'); if(!b) return;
-    currentCat = b.dataset.cat;
-    renderChips(); renderExplore();
-    $('expList').scrollTop = 0;
-  });
-  $('expList').addEventListener('click', function(ev){
-    var b = ev.target.closest('.exp-card'); if(!b) return;
-    if(b.dataset.id === 'circo') backToDetail();
-    else toast('Próximamente en tufinde');
-  });
-
-  function setTab(id){
-    Array.prototype.forEach.call(document.querySelectorAll('.app-view'), function(v){ v.classList.toggle('on', v.id === id); });
-    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){ t.classList.toggle('on', t.dataset.tab === id); });
-  }
-  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
-    t.addEventListener('click', function(){ setTab(t.dataset.tab); });
-  });
-
   // vuelve al detalle con el flujo reiniciado
   function backToDetail(){
     $('tickets').classList.remove('show');
@@ -1896,8 +1882,6 @@ img{display:block; max-width:100%;}
 
   /* ---------------- Init ---------------- */
   renderComplements();
-  renderChips();
-  renderExplore();
   syncDetail();
   update();
 })();
