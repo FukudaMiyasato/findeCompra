@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#FAF7F2">
 <title>findeCompra — Circo American</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 /* ============================================================
    findeCompra · Prototipo iOS
@@ -209,6 +210,8 @@ img{display:block; max-width:100%;}
 .t-pizza{background:linear-gradient(145deg,#E86A2B,#B8341A);}
 .t-chicken{background:linear-gradient(145deg,#D9452E,#8E1F13);}
 .t-museum{background:linear-gradient(145deg,#B9BCC4,#7C818C);}
+.t-play{background:linear-gradient(145deg,#B46BE8,#6A2FB0);}
+.t-theater{background:linear-gradient(145deg,#2BA3B5,#136171);}
 .t-water{background:linear-gradient(145deg,#4FC3F7,#1E6FD9);}
 .t-zoo{background:linear-gradient(145deg,#A5D66B,#3F8F3A);}
 .t-farm{background:linear-gradient(145deg,#F4D58D,#C98B3A);}
@@ -349,8 +352,9 @@ img{display:block; max-width:100%;}
   margin:0; font-size:15.5px; font-weight:700; letter-spacing:-.2px;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
+.comp-txt .tag{margin-bottom:5px;}
 .comp-txt p{
-  margin:3px 0 6px; font-size:12.5px; color:var(--ink-2);
+  margin:3px 0 0; font-size:12.5px; color:var(--ink-2);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .tag{
@@ -361,6 +365,61 @@ img{display:block; max-width:100%;}
 .comp-meta{display:flex; flex-direction:column; gap:2px; margin-top:6px; font-size:11.5px; color:var(--ink-2);}
 .comp-meta span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .comp-meta b{color:var(--ink); font-weight:700; margin-right:3px;}
+/* Mapa de ruta del plan */
+.route-card{margin:14px 18px 4px; border:1px solid var(--line-2); border-radius:18px; overflow:hidden; background:#fff; box-shadow:var(--shadow-sm);}
+.route-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 14px 12px;}
+.route-head h3{margin:0; font-size:16px; font-weight:800; letter-spacing:-.2px;}
+.route-head p{margin:3px 0 0; font-size:12.5px; color:var(--ink-2);}
+.route-edit{
+  flex:none; display:flex; align-items:center; gap:5px; height:32px; padding:0 13px;
+  border-radius:16px; border:1.5px solid var(--orange); color:var(--orange); font-size:13px; font-weight:700;
+  transition:background .2s, color .2s, transform .15s var(--spring);
+}
+.route-edit:active{transform:scale(.94);}
+.route-edit.on{background:var(--orange); color:#fff;}
+.route-edit:disabled{opacity:.4; cursor:default;}
+.route-map{height:210px; background:#E8E4DC; position:relative; z-index:0;}
+.route-map .leaflet-control-attribution{font-size:8.5px; background:rgba(255,255,255,.7);}
+.route-map.flash{animation:mapFlash .6s var(--ease);}
+@keyframes mapFlash{0%{filter:brightness(1)}40%{filter:brightness(1.08) saturate(1.2)}100%{filter:none}}
+.pin{
+  position:relative; width:34px; height:34px; border-radius:50%; background:#fff;
+  border:2.5px solid var(--orange); display:grid; place-items:center; font-size:17px;
+  box-shadow:0 3px 10px rgba(0,0,0,.25); animation:pinDrop .5s var(--spring) both;
+}
+.pin.main{width:40px; height:40px; border-color:#E0262B; overflow:hidden; padding:0;}
+.pin.main img{width:100%; height:100%; object-fit:cover; border-radius:50%;}
+.pin .ord{
+  position:absolute; top:-6px; right:-7px; min-width:17px; height:17px; border-radius:9px;
+  background:var(--navy); color:#fff; font-size:10px; font-weight:800; display:grid; place-items:center; padding:0 4px;
+}
+@keyframes pinDrop{0%{transform:translateY(-18px) scale(.6); opacity:0}100%{transform:none; opacity:1}}
+.route-line{stroke-linecap:round; stroke-linejoin:round;}
+.leaflet-tooltip.leg-tip{
+  background:var(--navy); color:#fff; border:none; border-radius:10px; padding:2px 7px;
+  font-size:10.5px; font-weight:700; box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+.leaflet-tooltip.leg-tip::before{display:none;}
+.route-stops{padding:10px 14px 4px;}
+.stop{display:flex; align-items:center; gap:10px; padding:6px 0; animation:expIn .35s var(--ease) both;}
+.stop + .stop{border-top:1px dashed var(--line-2);}
+.stop .n{width:22px; height:22px; border-radius:50%; flex:none; background:var(--navy); color:#fff; font-size:11px; font-weight:800; display:grid; place-items:center;}
+.stop .n.main{background:#E0262B;}
+.stop .nm{flex:1; min-width:0; font-size:13.5px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.stop .km{font-size:12px; color:var(--ink-2); font-weight:600; white-space:nowrap;}
+.stop .mv{display:none; gap:4px;}
+.route-card.editing .stop .mv{display:flex;}
+.stop .mv button{width:28px; height:28px; border-radius:50%; background:#F1EEE9; display:grid; place-items:center; color:var(--ink);}
+.stop .mv button:disabled{opacity:.3; cursor:default;}
+.share-title{padding:8px 14px 8px; font-size:11.5px; font-weight:700; letter-spacing:1.1px; color:var(--ink-2); text-transform:uppercase;}
+.share-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:0 14px 14px;}
+.share-btn{
+  height:40px; border-radius:20px; background:#F1EEE9; color:var(--ink);
+  display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; font-weight:700;
+  transition:transform .15s var(--spring);
+}
+.share-btn:active{transform:scale(.94);}
+.share-btn.wa{background:#25D366; color:#fff;}
 .save-note{font-size:11.5px; color:var(--green); font-weight:600;}
 .comp-price{text-align:right; flex:none;}
 .comp-price s{font-size:13px; color:var(--ink-3);}
@@ -669,6 +728,7 @@ img{display:block; max-width:100%;}
 
 .pass-qr span{display:block; margin-top:7px; font-size:11px; letter-spacing:1.4px; opacity:.8;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -864,6 +924,37 @@ img{display:block; max-width:100%;}
 
         <div class="comp-list" id="compList"></div>
 
+        <!-- Mapa de ruta del plan -->
+        <div class="route-card" id="routeCard">
+          <div class="route-head">
+            <div>
+              <h3 id="routeTitle">Mejor ruta generada</h3>
+              <p id="routeSub">Activa complementos para generar tu ruta</p>
+            </div>
+            <button class="route-edit" id="routeEdit">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>
+              <span>Editar</span>
+            </button>
+          </div>
+          <div class="route-map" id="routeMap"></div>
+          <div class="route-stops" id="routeStops"></div>
+          <div class="share-title">Compartir plan</div>
+          <div class="share-row">
+            <button class="share-btn wa" data-share="wa">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.7 11.7 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.5-.3z"/></svg>
+              WhatsApp
+            </button>
+            <button class="share-btn" data-share="copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+              Copiar
+            </button>
+            <button class="share-btn" data-share="more">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
+              Más
+            </button>
+          </div>
+        </div>
+
         <div style="height:6px"></div>
       </div>
 
@@ -992,10 +1083,12 @@ img{display:block; max-width:100%;}
   var BASE = { name:'El Circo', price:190.00, qty:1, active:true };
 
   var COMPLEMENTS = [
-    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'5.0 km', on:false },
-    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'3.2 km', on:false },
-    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'1.8 km', on:false },
-    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'6.5 km', on:false }
+    { id:'bembos',  name:'Almuerzo Bembos',   desc:'Hamburguesa Clásica + Papas + Gaseosa', tag:'Comida',      price:24.90, emoji:'🍔', cls:'t-food',    dist:'5.0 km', km:5.0, bearing:300, on:false },
+    { id:'pizza',   name:'Almuerzo Pizza Hut',desc:'Pizza Personal Americana + Gaseosa',    tag:'Comida',      price:29.90, emoji:'🍕', cls:'t-pizza',   dist:'3.2 km', km:3.2, bearing:20, on:false },
+    { id:'popeyes', name:'Almuerzo Popeyes',  desc:'2 piezas de Pollo Crujiente + Puré',    tag:'Comida',      price:26.90, emoji:'🍗', cls:'t-chicken', dist:'1.8 km', km:1.8, bearing:140, on:false },
+    { id:'museo',   name:'Museo contemporáneo',desc:'Pase de acceso general libre',         tag:'Experiencia', price:15.00, emoji:'🖼️', cls:'t-museum',  dist:'6.5 km', km:6.5, bearing:250, on:false },
+    { id:'playland',name:'Playland Park',     desc:'Pase ilimitado a juegos mecánicos',     tag:'Experiencia', price:30.00, emoji:'🎢', cls:'t-play',    dist:'2.6 km', km:2.6, bearing:80, on:false },
+    { id:'teatro',  name:'Teatro',            desc:'Obra familiar · función de la noche',   tag:'Experiencia', price:30.00, emoji:'🎭', cls:'t-theater', dist:'4.1 km', km:4.1, bearing:200, on:false }
   ];
 
   var DISCOUNT = 0.10; // 10% como complemento
@@ -1136,9 +1229,9 @@ img{display:block; max-width:100%;}
       row.innerHTML =
         '<div class="thumb ' + c.cls + '">' + c.emoji + '</div>' +
         '<div class="comp-txt">' +
+          '<span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
           '<h4>' + c.name + '</h4>' +
           '<p>' + c.desc + '</p>' +
-          '<span class="tag' + (c.tag === 'Experiencia' ? ' exp' : '') + '">' + c.tag + '</span>' +
           '<div class="comp-meta">' +
             '<span><b>Distancia</b> ' + c.dist + ' del evento</span>' +
             '<span><b>Reclamar</b> de ' + CLAIM + '</span>' +
@@ -1167,7 +1260,9 @@ img{display:block; max-width:100%;}
     sw.closest('.comp').classList.toggle('on', c.on);
     floater(sw, c.on ? '+1 ítem' : '−1 ítem');
     if(c.on) playSave(itemCount());
+    customOrder = null;
     update();
+    drawRoute(true);
   }
 
   /* ---------------- Estado / cálculo ---------------- */
@@ -1282,6 +1377,159 @@ img{display:block; max-width:100%;}
     lastCount = count;
   }
 
+  /* ---------------- Mapa: mejor ruta del plan ---------------- */
+  var EVENT_POS = [-12.0857, -76.9744];   // Jockey Plaza
+  var routeMap = null, routeLayer = null, customOrder = null, editing = false;
+
+  // coordenadas de ejemplo de cada complemento (distancia + rumbo desde el evento)
+  function compPos(c){
+    var b = c.bearing * Math.PI / 180;
+    return [EVENT_POS[0] + c.km * Math.cos(b) / 111.32,
+            EVENT_POS[1] + c.km * Math.sin(b) / (111.32 * Math.cos(EVENT_POS[0] * Math.PI / 180))];
+  }
+  function kmBetween(a, b){
+    var R = 6371, r = Math.PI / 180;
+    var dLat = (b[0] - a[0]) * r, dLng = (b[1] - a[1]) * r;
+    var h = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.pow(Math.sin(dLng / 2), 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  function routeKm(order){
+    var prev = EVENT_POS, sum = 0;
+    order.forEach(function(c){ var p = compPos(c); sum += kmBetween(prev, p); prev = p; });
+    return sum;
+  }
+  // mejor ruta: prueba todas las permutaciones (máx. 6 paradas = 720)
+  function bestOrder(stops){
+    var best = stops.slice(), bestKm = Infinity;
+    (function perm(arr, rest){
+      if(!rest.length){ var k = routeKm(arr); if(k < bestKm){ bestKm = k; best = arr.slice(); } return; }
+      rest.forEach(function(c, i){ perm(arr.concat([c]), rest.slice(0, i).concat(rest.slice(i + 1))); });
+    })([], stops);
+    return best;
+  }
+  function currentOrder(){
+    var on = COMPLEMENTS.filter(function(c){ return c.on; });
+    if(customOrder){
+      var ids = customOrder.filter(function(id){ return on.some(function(c){ return c.id === id; }); });
+      if(ids.length === on.length) return ids.map(function(id){ return COMPLEMENTS.find(function(c){ return c.id === id; }); });
+    }
+    return bestOrder(on);
+  }
+
+  function ensureMap(){
+    if(routeMap || !window.L) return !!routeMap;
+    routeMap = L.map('routeMap', {
+      zoomControl:false, dragging:false, scrollWheelZoom:false, touchZoom:false,
+      doubleClickZoom:false, boxZoom:false, keyboard:false, tap:false
+    }).setView(EVENT_POS, 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      maxZoom:19, subdomains:'abcd',
+      attribution:'© OpenStreetMap · © CARTO'
+    }).addTo(routeMap);
+    routeLayer = L.layerGroup().addTo(routeMap);
+    return true;
+  }
+
+  function pinIcon(html, cls, size){
+    return L.divIcon({ className:'', html:'<div class="pin ' + (cls || '') + '">' + html + '</div>', iconSize:[size, size], iconAnchor:[size / 2, size / 2] });
+  }
+
+  function drawRoute(animate){
+    var order = currentOrder();
+    var total = routeKm(order);
+    var isBest = !customOrder || order.map(function(c){ return c.id; }).join() === bestOrder(order.slice()).map(function(c){ return c.id; }).join();
+
+    // encabezado
+    $('routeTitle').textContent = isBest ? 'Mejor ruta generada' : 'Ruta personalizada';
+    $('routeSub').textContent = order.length
+      ? order.length + (order.length === 1 ? ' parada' : ' paradas') + ' · ' + total.toFixed(1) + ' km · ~' + Math.max(5, Math.round(total / 20 * 60)) + ' min'
+      : 'Activa complementos para generar tu ruta';
+    $('routeEdit').disabled = order.length < 2;
+    if(order.length < 2 && editing) setEditing(false);
+
+    // lista de paradas
+    var prev = EVENT_POS;
+    var html = '<div class="stop"><span class="n main">★</span><span class="nm">Circo American · Jockey Plaza</span><span class="km">Inicio</span></div>';
+    order.forEach(function(c, i){
+      var pos = compPos(c), leg = kmBetween(prev, pos); prev = pos;
+      html += '<div class="stop" style="animation-delay:' + (i * 60) + 'ms"><span class="n">' + (i + 1) + '</span>' +
+        '<span class="nm">' + c.emoji + ' ' + c.name + '</span><span class="km">+' + leg.toFixed(1) + ' km</span>' +
+        '<span class="mv"><button data-mv="-1" data-id="' + c.id + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="Subir">↑</button>' +
+        '<button data-mv="1" data-id="' + c.id + '"' + (i === order.length - 1 ? ' disabled' : '') + ' aria-label="Bajar">↓</button></span></div>';
+    });
+    $('routeStops').innerHTML = html;
+
+    // mapa
+    if(!ensureMap()) return;
+    routeLayer.clearLayers();
+    var pts = [EVENT_POS].concat(order.map(compPos));
+    L.marker(EVENT_POS, { icon:pinIcon('<img src="assets/american-circus.webp" alt="">', 'main', 40), zIndexOffset:1000 }).addTo(routeLayer);
+    order.forEach(function(c, i){
+      L.marker(pts[i + 1], { icon:pinIcon(c.emoji + '<span class="ord">' + (i + 1) + '</span>', '', 34) }).addTo(routeLayer);
+    });
+    // tramos: se dibujan uno tras otro
+    for(var i = 1; i < pts.length; i++){
+      (function(a, b, idx){
+        L.polyline([a, b], { color:'#fff', weight:8, opacity:.9, className:'route-line' }).addTo(routeLayer);
+        var line = L.polyline([a, b], { color:'#F15A22', weight:4.5, className:'route-line' }).addTo(routeLayer);
+        line.bindTooltip(kmBetween(a, b).toFixed(1) + ' km', { permanent:true, direction:'center', className:'leg-tip' });
+        var path = line.getElement ? line.getElement() : line._path;
+        if(animate && path && path.getTotalLength){
+          var len = path.getTotalLength();
+          path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+          path.style.transition = 'stroke-dashoffset .5s ' + (0.15 + idx * 0.35) + 's cubic-bezier(.4,0,.2,1)';
+          requestAnimationFrame(function(){ requestAnimationFrame(function(){ path.style.strokeDashoffset = 0; }); });
+          setTimeout(function(){ path.style.strokeDasharray = ''; path.style.transition = ''; }, 900 + idx * 350);
+        }
+      })(pts[i - 1], pts[i], i - 1);
+    }
+    if(pts.length > 1) routeMap.flyToBounds(L.latLngBounds(pts), { padding:[34, 34], duration:animate ? .7 : 0, maxZoom:15 });
+    else routeMap.flyTo(EVENT_POS, 14, { duration:animate ? .6 : 0 });
+    if(animate){ var m = $('routeMap'); m.classList.remove('flash'); void m.offsetWidth; m.classList.add('flash'); }
+  }
+
+  function setEditing(on){
+    editing = on;
+    $('routeCard').classList.toggle('editing', on);
+    $('routeEdit').classList.toggle('on', on);
+    $('routeEdit').querySelector('span').textContent = on ? 'Listo' : 'Editar';
+  }
+  $('routeEdit').addEventListener('click', function(){ setEditing(!editing); });
+  $('routeStops').addEventListener('click', function(ev){
+    var b = ev.target.closest('[data-mv]'); if(!b) return;
+    var ids = currentOrder().map(function(c){ return c.id; });
+    var i = ids.indexOf(b.dataset.id), j = i + parseInt(b.dataset.mv, 10);
+    if(j < 0 || j >= ids.length) return;
+    ids.splice(j, 0, ids.splice(i, 1)[0]);
+    customOrder = ids;
+    drawRoute(true);
+  });
+
+  // compartir plan
+  function planText(){
+    var order = currentOrder();
+    var lines = ['Mi plan tufinde · Sáb 18 Mar', '★ Circo American · Jockey Plaza'];
+    order.forEach(function(c, i){ lines.push((i + 1) + '. ' + c.name + ' (' + c.dist + ' del evento, reclamar ' + CLAIM + ')'); });
+    if(order.length) lines.push('Ruta: ' + routeKm(order).toFixed(1) + ' km');
+    lines.push('Total: S/ ' + money(totals().total));
+    return lines.join('\n');
+  }
+  function copyPlan(){
+    var txt = planText();
+    var done = function(){ toast('Plan copiado'); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
+    else done();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-share]'), function(b){
+    b.addEventListener('click', function(){
+      var kind = b.dataset.share;
+      if(kind === 'wa') window.open('https://wa.me/?text=' + encodeURIComponent(planText()), '_blank', 'noopener');
+      else if(kind === 'copy') copyPlan();
+      else if(navigator.share) navigator.share({ title:'Mi plan tufinde', text:planText() }).catch(function(){});
+      else copyPlan();
+    });
+  });
+
   /* ---------------- Pantalla de detalle ---------------- */
   function syncDetail(){
     var q = BASE.qty;
@@ -1315,7 +1563,14 @@ img{display:block; max-width:100%;}
     $('statusbar').classList.remove('on-dark');
     $('prizeCard').classList.remove('min');
     lastSheetY = $('sheetScroll').scrollTop = 0;
+    customOrder = null; setEditing(false);
     update();
+    drawRoute(false);
+    setTimeout(function(){
+      if(!ensureMap()) return;
+      routeMap.invalidateSize();
+      drawRoute(false);
+    }, 520);
   }
   function heroLimit(){ return $('hero').offsetHeight - 52; }
   function closeSheet(){
@@ -1413,7 +1668,7 @@ img{display:block; max-width:100%;}
     }
     COMPLEMENTS.forEach(function(c){
       if(!c.on) return;
-      var pal = { bembos:['#2B5CC4','#173A86'], pizza:['#2E8B57','#1B5E3B'], popeyes:['#F07A1F','#B8520C'], museo:['#4A505E','#262A33'] }[c.id];
+      var pal = { bembos:['#2B5CC4','#173A86'], pizza:['#2E8B57','#1B5E3B'], popeyes:['#F07A1F','#B8520C'], museo:['#4A505E','#262A33'], playland:['#8E44C4','#55267F'], teatro:['#1F8A9C','#10505C'] }[c.id];
       list.push({ c1:pal[0], c2:pal[1], logo:c.emoji, org:c.name, hl:'Pagado', hv:'S/ ' + money(c.price * (1 - DISCOUNT)),
         pl:c.tag === 'Comida' ? 'Complemento' : 'Experiencia', pv:c.name.replace('Almuerzo ', ''),
         fields:[['Reclamar', CLAIM], ['Distancia', c.dist], ['Dto.', '10%']], code:c.id.toUpperCase() });
